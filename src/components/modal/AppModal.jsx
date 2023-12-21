@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import ProfileModal from "./profileModal/profileModal";
 import { useEffect, useRef } from "react";
 import { closeModal } from "../../redux/slice/modalSlice";
+import ProfileModal from "./profileModal/ProfileModal";
 
 const AppModal = () => {
     const allModalState = useSelector((state) => state.allModal)
