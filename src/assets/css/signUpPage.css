@@ -1,0 +1,41 @@
+.signUp_input_section {
+    @apply w-[450px] md:w-[600px] py-4 pb-16 md:pb-4 px-4 lg:ps-10  xl:ps-0 mx-auto flex items-center
+}
+
+.signUp_title {
+    @apply text-[34px] text-center lg:text-left text-[#11175D] font-nunito mt-6 font-bold
+}
+
+.signUp_short_desc {
+    @apply text-[20px] text-[#64699D] text-center lg:text-left font-nunito mt-2
+}
+
+.form_input_field_section {
+    @apply mb-10
+}
+
+.form_input_field_area {
+    @apply border-2 rounded-md relative transition-all duration-200
+}
+.form_input_field_area input {
+    @apply w-full text-xl outline-0 outline-none bg-transparent px-[52px] py-6 z-[1] relative text-[#11175D]
+}
+
+.form_input_label {
+    @apply absolute z-[0] transform -translate-y-1/2 origin-left transition-all duration-200 -ms-4 left-[52px] text-xl inline-block px-4 py-1.5 font-semibold
+}
+
+.form_input_errors {
+    @apply px-2 my-2 text-red-500
+}
+
+.form_submission_button input {
+    @apply w-full bg-app-primary active:bg-indigo-700 text-white text-xl font-semibold text-center cursor-pointer px-[52px] py-5 rounded-full
+}
+.form_submission_button .loader {
+    @apply w-full bg-slate-200 text-app-primary cursor-not-allowed select-none px-[52px] py-5 rounded-full
+}
+
+.signUp_body_image_section {
+    @apply hidden md:block
+}

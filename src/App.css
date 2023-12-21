@@ -1,0 +1,26 @@
+/* google font nunito */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900;1000&display=swap');
+
+/* google font lobster */
+/* @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
+
+
+
+
+  /* WebKit-based browsers (Chrome, Safari) */
+  ::-webkit-scrollbar {
+    width: 4px;
+    position: absolute;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #888; /* Set the color of the scrollbar thumb */
+    border-radius: 6px; /* Optional: Set border-radius for a rounded thumb */
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+

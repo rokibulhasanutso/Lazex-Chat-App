@@ -1,0 +1,41 @@
+.signIn_input_section {
+    @apply w-[450px] md:w-[600px] py-4 pb-16 md:pb-4 px-4 lg:ps-10  xl:ps-0 mx-auto flex items-center
+}
+
+.signIn_title {
+    @apply text-2xl sm:text-3xl md:text-[34px] text-center lg:text-left text-[#11175D] font-nunito mt-6 font-bold 
+}
+
+.signIn_short_desc {
+    @apply text-[20px] text-[#64699D] text-center lg:text-left font-nunito mt-2
+}
+
+.SignIn_form_input_field_section {
+    @apply mb-10
+}
+
+.SignIn_form_input_field_area {
+    @apply border-b-2 relative transition-all duration-200
+}
+.SignIn_form_input_field_area input {
+    @apply w-full text-xl outline-0 outline-none bg-transparent px-0.5 py-4 z-[1] relative text-[#11175D]
+}
+
+.SignIn_form_input_label {
+    @apply absolute z-[0] transform -translate-y-1/2 origin-left transition-all duration-200 left-0 text-xl inline-block py-1.5 font-semibold
+}
+
+.SignIn_form_input_errors {
+    @apply px-2 my-2 text-red-500
+}
+
+.SignIn_form_submission_button input {
+    @apply w-full bg-app-primary active:bg-indigo-700 text-white text-xl font-semibold text-center cursor-pointer px-[52px] py-5 rounded-md
+}
+.SignIn_form_submission_button .loader {
+    @apply w-full bg-slate-200 text-app-primary cursor-not-allowed select-none px-[52px] py-5 rounded-md
+}
+
+.signIn_body_image_section {
+    @apply hidden md:block
+}
