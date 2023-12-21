@@ -20,7 +20,7 @@ const AppModal = () => {
 
         window.addEventListener('click', clickWithoutModal)
         return () => { window.removeEventListener('click', clickWithoutModal) }
-    }, [dispatch])
+    }, [])
 
     return (
         <>{
