@@ -25,9 +25,9 @@ const rootRoute = createBrowserRouter(
                     <Route index element={<Home/>}/>
                     <Route path="messages" element={<Messages/>}/>
                     <Route path="notification" element={<Notification/>}/>
-                    <Route path="setting" element={<Setting/>}/>
                 </Route>
             </Route>
+                    <Route path="setting" element={<Setting/>}/>
 
         </Route>
     )
