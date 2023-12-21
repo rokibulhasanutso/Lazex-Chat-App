@@ -15,9 +15,9 @@ const rootRoute = createBrowserRouter(
         <Route path="/">
 
             {/* // Public route */}
-            <Route path="/signin" element={<SignIn/>}/>
-            <Route path="/signup" element={<SignUp/>}/>
-            <Route path="/resetpassword" element={<ResetPassword/>}/>
+            <Route path="signin" element={<SignIn/>}/>
+            <Route path="signup" element={<SignUp/>}/>
+            <Route path="resetpassword" element={<ResetPassword/>}/>
 
             {/* Private route */}
             <Route path="/" element={<PrivateRoute/>}>
@@ -25,9 +25,9 @@ const rootRoute = createBrowserRouter(
                     <Route index element={<Home/>}/>
                     <Route path="messages" element={<Messages/>}/>
                     <Route path="notification" element={<Notification/>}/>
+                    <Route path="setting" element={<Setting/>}/>
                 </Route>
             </Route>
-                    <Route path="/setting" element={<Setting/>}/>
 
         </Route>
     )
