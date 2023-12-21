@@ -40,13 +40,13 @@ const ProfileImageSection = () => {
 
 
     const UploadProfileImage = (event) => {
-        imageFileReader(event.target, ({imageData, error}) => {
+        imageFileReader(event.target, ({imageData}) => {
 
             // console.log(loading)
             console.log(imageData);
             // console.log(error)
 
-            imageCompression(imageData, 500, ({imageSize, imageBlobUrl, imageBlob}) => {
+            imageCompression(imageData, 500, ({imageBlob}) => {
                 // console.log({imageSize, imageBlobUrl, imageBlob})
                 console.log(imageBlob)
                 console.log(event.target.files[0])
