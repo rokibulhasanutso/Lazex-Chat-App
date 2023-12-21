@@ -27,7 +27,7 @@ const rootRoute = createBrowserRouter(
                     <Route path="notification" element={<Notification/>}/>
                 </Route>
             </Route>
-                    <Route path="setting" element={<Setting/>}/>
+                    <Route path="/setting" element={<Setting/>}/>
 
         </Route>
     )
