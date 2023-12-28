@@ -8,7 +8,7 @@ const PrivateRoute = () => {
     // console.log(isAuthenticated)
     let isAuthenticated = false;
     const currentUser = getlocalStorage()
-    if (currentUser.uid) {
+    if (currentUser) {
         isAuthenticated = true;
     } else {
         isAuthenticated = false;
