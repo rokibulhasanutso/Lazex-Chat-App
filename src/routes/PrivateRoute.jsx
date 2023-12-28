@@ -1,14 +1,24 @@
 import { Navigate, Outlet} from "react-router-dom";
+// import { useSelector } from "react-redux";
+import getlocalStorage from "../utility/getLocalStorage";
 
 const PrivateRoute = () => {
-    
-    const checkAuth = () => {
-        return true
+    // const { isAuthenticated } = useSelector((state) => state.authtication)
+
+    // console.log(isAuthenticated)
+    let isAuthenticated = false;
+    const currentUser = getlocalStorage()
+    if (currentUser.uid) {
+        isAuthenticated = true;
+    } else {
+        isAuthenticated = false;
     }
+
+    console.log(isAuthenticated, currentUser);
 
     return (
         
-        checkAuth() 
+        isAuthenticated
             ? <Outlet/>
             : <Navigate to="/signin" replace/>
     );

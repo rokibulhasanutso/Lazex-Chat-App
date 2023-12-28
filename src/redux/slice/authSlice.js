@@ -1,26 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
-import currentUser from '../../firebase/currentUser';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const authSlice = createSlice({
-    name: 'authentication',
+  name: "authentication",
 
-    initialState: {
-        userData: currentUser((data) => ({
-            uid: data.uid, 
-            displayName: data.displayName, 
-            email: data.email, 
-            photoURL: data.photoURL
-        }))
-    },
+  initialState: {
+    userData: null,
+    isAuthenticated: false,
+  },
 
-    reducers: {
-        increment: (state) => {
-            state.value += 1;
-        },
+  reducers: {
+    setUserData: (state, actions) => {
+        state.userData = actions.payload
+        state.isAuthenticated = actions.payload ? true : false
     },
-})
+  },
+});
 
 // reducer actions
-export const { increment } = authSlice.actions;
+export const { setUserData } = authSlice.actions;
 
 export default authSlice.reducer;

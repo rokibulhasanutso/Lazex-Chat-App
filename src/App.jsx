@@ -7,7 +7,7 @@ const App = () => {
     return (
         <>
             <RouterProvider router={rootRoute}/>
-            
+
             {/* all modal open in AppModal component */}
             <AppModal/>
         </>

@@ -4,6 +4,7 @@ import { app } from "./firebaseConfig";
 const currentUser = (callback) => {
     const user = getAuth(app).currentUser
     callback(user || {})
+    console.log(user)
 }
 
 export const getUserData = () => {

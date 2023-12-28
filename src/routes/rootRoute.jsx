@@ -14,10 +14,13 @@ const rootRoute = createBrowserRouter(
 
         <Route path="/">
 
-            {/* // Public route */}
+            {/* Public route */}
             <Route path="signin" element={<SignIn/>}/>
             <Route path="signup" element={<SignUp/>}/>
             <Route path="resetpassword" element={<ResetPassword/>}/>
+
+            {/* without auth */}
+            <Route path="" element={<DashboardLayout/>}/>
 
             {/* Private route */}
             <Route path="/" element={<PrivateRoute/>}>

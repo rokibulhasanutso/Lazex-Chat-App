@@ -4,11 +4,9 @@ import { app } from "./firebaseConfig";
 const userSignOut = () => {
     const auth = getAuth(app);
     
-    signOut(auth).then((data) => {
+    signOut(auth).then(() => {
+        // console.log("user is signed out")
 
-        console.log(data);
-        console.log("user is signed out")
-        
     }).catch((error) => {
         console.log(error)
     })

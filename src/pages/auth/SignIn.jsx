@@ -7,10 +7,14 @@ import signInUser from "../../firebase/signInUser";
 import { LuLoader2 } from "react-icons/lu";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../redux/slice/authSlice";
+import setlocalStorage from "../../utility/setLocalStorage";
 
 const SignIn = () => {
     
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const [ inputLavel, setInputLabel ] = useState({email: false, password: false})
     const [ formData, setFormData ] = useState({email: '', password: ''})
@@ -70,12 +74,18 @@ const SignIn = () => {
         event.preventDefault()
         setUserCreationLoading(true)
 
+        // firebase signIn 
         signInUser(formData, (response) => {
             setUserCreationLoading(false)
 
             // console.log(response);
 
             if (response.ok) {
+                // set data on localStorage
+                setlocalStorage(response.user)
+                // data dispatched on redux authentication store
+                dispatch(setUserData(response.user));
+
                 setUserCreationMessage({ 
                     status: 'success',
                     message: 'You are login successfully'
@@ -125,7 +135,7 @@ const SignIn = () => {
                             <div className="inline-block cursor-pointer active:bg-slate-100">
                                 <div className="border border-gray-400 px-7 py-5 rounded-md flex gap-2 items-center">
                                     <div className="googleAuth-img">
-                                        <img src="/public/app_Images/google-icon.png" alt="Google Icon" />
+                                        <img src="/app_Images/google-icon.png" alt="Google Icon" />
                                     </div>
                                     <span className="font-semibold text-[#11175D] select-none">Login with Google</span>
                                 </div>

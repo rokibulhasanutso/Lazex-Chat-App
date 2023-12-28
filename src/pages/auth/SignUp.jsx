@@ -7,9 +7,13 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
 import { LuLoader2 } from "react-icons/lu";
 import createUser from '../../firebase/createUser';
+import setlocalStorage from '../../utility/setLocalStorage';
+import { setUserData } from '../../redux/slice/authSlice';
+import { useDispatch } from 'react-redux';
 
 const SignUp = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     // inputs
     const [ inputLavel, setInputLabel ] = useState({email: false, name: false, password: false})
@@ -128,6 +132,7 @@ const SignUp = () => {
         }
     }, []);
 
+    // form data submit
     const formSubmission = (event) => {
         event.preventDefault();
         setUserCreationLoading(true);
@@ -182,13 +187,16 @@ const SignUp = () => {
                 // console.log(response);
 
                 if (response.ok) {
+                    // set data on localStorage
+                    setlocalStorage(response.user)
+                    // data dispatched on redux authentication store
+                    dispatch(setUserData(response.user));
+
                     setUserCreationMessage({ 
                         status: 'success',
                         message: 'Your account created successfully'
                     })
                     
-                    
-
                     setTimeout(() => {
                         navigate('/')
                     }, 500);
