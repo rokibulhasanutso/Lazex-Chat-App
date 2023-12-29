@@ -8,6 +8,7 @@ import Messages from "../pages/dashboard/Messages";
 import Notification from './../pages/dashboard/Notification';
 import Setting from "../pages/dashboard/Setting";
 import ResetPassword from "../pages/auth/ResetPassword";
+import WithoutAuthenticationRoute from "./WithoutAuthenticationRoute";
 
 const rootRoute = createBrowserRouter(
     createRoutesFromElements(
@@ -15,12 +16,14 @@ const rootRoute = createBrowserRouter(
         <Route path="/">
 
             {/* Public route */}
-            <Route path="signin" element={<SignIn/>}/>
             <Route path="signup" element={<SignUp/>}/>
-            <Route path="resetpassword" element={<ResetPassword/>}/>
-
-            {/* without auth */}
-            <Route path="" element={<DashboardLayout/>}/>
+            
+            {/* without authentication route */}
+            {/*** when user authenticated this time can't access this route */}
+            <Route path="/" element={<WithoutAuthenticationRoute/>}>
+                <Route path="signin" element={<SignIn/>}/>
+                <Route path="resetpassword" element={<ResetPassword/>}/>
+            </Route>
 
             {/* Private route */}
             <Route path="/" element={<PrivateRoute/>}>

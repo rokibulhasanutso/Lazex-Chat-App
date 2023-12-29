@@ -2,7 +2,7 @@ import { Navigate, Outlet} from "react-router-dom";
 // import { useSelector } from "react-redux";
 import getlocalStorage from "../utility/getLocalStorage";
 
-const PrivateRoute = () => {
+const WithoutAuthenticationRoute = () => {
     
     let isAuthenticated = false;
     const currentUser = getlocalStorage()
@@ -17,9 +17,9 @@ const PrivateRoute = () => {
     return (
         
         isAuthenticated
-            ? <Outlet/>
-            : <Navigate to="/signin" replace/>
+            ? <Navigate to="/" replace/>
+            : <Outlet/>
     );
 };
 
-export default PrivateRoute
+export default WithoutAuthenticationRoute

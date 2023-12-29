@@ -5,11 +5,16 @@ export const modalSlice = createSlice({
 
     initialState: {
         imageProfileModal: false,
+        signoutModal: false,
     },
 
     reducers: {
         showImageProfileModal: (state, actions) => {
             state.imageProfileModal = actions.payload
+        },
+
+        showSignoutModal: (state, actions) => {
+            state.signoutModal = actions.payload
         },
 
         closeModal: (state) => {
@@ -23,6 +28,6 @@ export const modalSlice = createSlice({
 })
 
 // reducer actions
-export const { showImageProfileModal, closeModal } = modalSlice.actions;
+export const { showImageProfileModal, showSignoutModal, closeModal } = modalSlice.actions;
 
 export default modalSlice.reducer

@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import { closeModal } from "../../redux/slice/modalSlice";
 import ProfileModal from "./profileModal/ProfileModal";
+import SignoutModal from "./signoutModal/SignoutModal";
 
 const AppModal = () => {
     const allModalState = useSelector((state) => state.allModal)
@@ -9,7 +10,7 @@ const AppModal = () => {
     const modalRef = useRef(null)
 
     const modalActive = Object.values(allModalState).find((modalState) => modalState)
-    const { imageProfileModal } = allModalState
+    const { imageProfileModal, signoutModal } = allModalState
 
     useEffect(() => {
         const clickWithoutModal = (event) => {
@@ -30,6 +31,7 @@ const AppModal = () => {
                 className={`fixed ${ modalActive ? 'scale-100' : 'scale-75'} transition-all z-[999] bg-black/75 inset-0 flex justify-center items-center`}
             >
                 { imageProfileModal && <ProfileModal/> }
+                { signoutModal && <SignoutModal/> }
 
             </div>
         }</>

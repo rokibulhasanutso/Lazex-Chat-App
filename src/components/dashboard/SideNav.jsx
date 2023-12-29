@@ -1,11 +1,13 @@
 import { NavLink } from "react-router-dom";
 import ImageUploader from "../common/ImageUploader";
-import userSignOut from "../../firebase/signOut";
+import { useDispatch } from "react-redux";
+import { showSignoutModal } from "../../redux/slice/modalSlice";
 
 const SideNav = () => {
+    const dispatch = useDispatch()
 
     const handleSignOut = () => {
-        userSignOut()
+        dispatch(showSignoutModal(true))
     }
 
     return (
