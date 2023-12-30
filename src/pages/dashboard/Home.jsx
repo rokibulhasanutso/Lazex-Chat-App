@@ -1,36 +1,24 @@
-import ListComponent from './../../components/common/ListComponent';
-import AddFriendButton from './../../components/button/AddFriendButton';
+import AdditonalPost from "../../components/PostContent/AdditonalPost";
+
 
 const Home = () => {
 
     return (
-        <div className='ps-10 py-9 grid grid-cols-3 grid-rows-2 gap-6 mx-auto'>
-        
-            <ListComponent 
-                name={'Rokibul Hasan'}
-                title={'What\'s you today?'}
-            >
-                <AddFriendButton/>
-            </ListComponent>
-            <ListComponent 
-                name={'Rokibul Hasan'}
-                title={'What\'s you today?'}
-            >
-                <AddFriendButton/>
-            </ListComponent>
-            <ListComponent 
-                name={'Rokibul Hasan'} 
-                title={'What\'s you today?'}
-            >
-                <AddFriendButton/>
-            </ListComponent>
-            <ListComponent 
-                name={'Rokibul Hasan'} 
-                title={'What\'s you today?'}
-            >
-                <AddFriendButton/>
-            </ListComponent>
+        <div className="max-w-[700px] mx-auto">
+            <div className="border border-slate-400 rounded-xl bg-white">
+                <p className="text-xl border-slate-300 rounded-md px-8 py-3 font-semibold text-slate-600">Importants for you</p>
+                
+                <div className="">
+                    <AdditonalPost/>
+                    <AdditonalPost/>
+                    <AdditonalPost/>
+                    <AdditonalPost/>
+                    <AdditonalPost/>
+                    <AdditonalPost/>
+                    <AdditonalPost/>
+                </div>
 
+            </div>
         </div>
     )
 };
