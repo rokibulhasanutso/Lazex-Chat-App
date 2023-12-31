@@ -1,8 +1,8 @@
 import { CgMailReply } from 'react-icons/cg';
-import { IoIosMore } from 'react-icons/io';
+import { IoIosArrowDown, IoIosMore } from 'react-icons/io';
 import { TbFolderShare, TbHeartShare, TbCameraShare } from "react-icons/tb";
 
-const PostButton = ({label, count, variant, action, position}) => {
+const PostButton = ({label, count, variant, action, position, expand}) => {
 
     const button = {}
 
@@ -25,6 +25,10 @@ const PostButton = ({label, count, variant, action, position}) => {
     else if (variant === 'menu') {
         button.classList = `text-xl text-slate-500 ${position} py-2`
         button.icon = <IoIosMore className={`rotate-90`}/>
+    }
+    else if (variant === 'expand') {
+        button.classList = `text-xl text-slate-500 ${position} py-2`
+        button.icon = <IoIosArrowDown className={expand ? 'rotate-180 transition-all' : ''}/>
     }
 
     return (
