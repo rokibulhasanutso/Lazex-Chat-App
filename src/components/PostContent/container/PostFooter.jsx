@@ -2,7 +2,7 @@ import PostButton from "../../button/PostButton";
 
 const PostFooter = () => {
     return (
-        <div className="px-8 py-1 pb-4 flex justify-between">
+        <div className="px-8 py-1 flex justify-between">
             <div className="flex">
                 <PostButton variant={'read-latter'} label={'Read latter'}/>
                 <PostButton variant={'clip-share'} label={'Clip share'}/>

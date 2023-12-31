@@ -1,8 +1,9 @@
-import { IoIosArrowDown } from "react-icons/io";
 
-const PostHeader = () => {
+import { BsGlobeAmericas } from "react-icons/bs";
+
+const PostHeader = ({children}) => {
     return (
-        <div className="flex items-center justify-between px-8 py-2 border-b border-slate-300 ">
+        <div className="flex justify-between px-8 py-2 border-b border-slate-300 ">
             <div className="flex space-x-3">
                 <div className="relative">
                     <div className="w-16 h-16 border overflow-hidden rounded-full">
@@ -19,16 +20,13 @@ const PostHeader = () => {
                 </div>
             </div>
             <div className="flex space-x-4">
-                <p className="text-sm text-slate-500 space-x-1">
+                <p className="text-sm text-slate-500 space-x-1 self-start py-2">
+                    <BsGlobeAmericas className="inline-block"/>
                     <span>11</span>
                     <span>munite</span>
                 </p>
-                <button
-                    className="text-xl text-slate-500"
-                    onClick={() => {}}
-                >
-                    <IoIosArrowDown/>
-                </button>
+
+                {children}
             </div>
         </div>
     );
