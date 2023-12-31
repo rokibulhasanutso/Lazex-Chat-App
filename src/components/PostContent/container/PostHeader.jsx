@@ -3,7 +3,7 @@ import { BsGlobeAmericas } from "react-icons/bs";
 
 const PostHeader = ({children}) => {
     return (
-        <div className="flex justify-between px-8 py-2 border-b border-slate-300 ">
+        <div className={`flex justify-between px-8 py-2 border-b border-slate-300`}>
             <div className="flex space-x-3">
                 <div className="relative">
                     <div className="w-16 h-16 border overflow-hidden rounded-full">

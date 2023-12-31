@@ -28,7 +28,7 @@ const PostButton = ({label, count, variant, action, position, expand}) => {
     }
     else if (variant === 'expand') {
         button.classList = `text-xl text-slate-500 ${position} py-2`
-        button.icon = <IoIosArrowDown className={expand ? 'rotate-180 transition-all' : ''}/>
+        button.icon = <IoIosArrowDown className={`${expand ? 'rotate-180' : 'rotate-0'} transition-all`}/>
     }
 
     return (
