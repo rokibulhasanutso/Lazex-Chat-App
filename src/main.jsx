@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import store from './redux/store'
+import { Provider } from 'react-redux'
 import App from './App.jsx'
 import './index.css'
 import './App.css'
 import 'react-day-picker/dist/style.css';
-import store from './redux/store'
-import { Provider } from 'react-redux'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
