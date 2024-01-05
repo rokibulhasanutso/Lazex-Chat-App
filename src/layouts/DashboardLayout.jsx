@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import SideNav from '../components/dashboard/SideNav';
-import SortInfoNav from '../components/dashboard/SortInfoNav';
+import SideNav from '../pages/dashboard/SideNav';
+import SortInfoNav from '../pages/dashboard/SortInfoNav';
 
 const DashboardLayout = () => {
     return (

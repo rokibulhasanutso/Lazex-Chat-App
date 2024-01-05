@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import ImageUploader from "../common/ImageUploader";
+import ImageUploader from "../../components/common/ImageUploader";
 import { useDispatch } from "react-redux";
 import { showSignoutModal } from "../../redux/slice/modalSlice";
 

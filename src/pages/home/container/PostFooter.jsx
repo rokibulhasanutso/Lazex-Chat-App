@@ -1,4 +1,4 @@
-import PostButton from "../../button/PostButton";
+import PostButton from "../../../components/button/PostButton";
 
 const PostFooter = () => {
     return (

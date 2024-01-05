@@ -7,7 +7,7 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
 import { LuLoader2 } from "react-icons/lu";
 import createUser from '../../firebase/createUser';
-import setlocalStorage from '../../utility/setLocalStorage';
+import setlocalStorage from '../../utils/setLocalStorage';
 import { setUserData } from '../../redux/slice/authSlice';
 import { useDispatch } from 'react-redux';
 

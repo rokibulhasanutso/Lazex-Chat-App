@@ -5,11 +5,13 @@ const PostHeader = ({children}) => {
     return (
         <div className={`flex justify-between px-8 py-2 border-b border-slate-300`}>
             <div className="flex space-x-3">
-                <div className="relative">
-                    <div className="w-16 h-16 border overflow-hidden rounded-full">
-                        <img src='/app_Images/profile_picture1.jpg' alt="Post Image" />
+                <div className="flex items-center">
+                    <div className="relative">
+                        <div className="w-16 h-16 border overflow-hidden rounded-full">
+                            <img src='/app_Images/profile_picture1.jpg' alt="Post Image" />
+                        </div>
+                        <span className="inline-block rounded-full absolute right-0 bottom-1 w-4 h-4 border border-white bg-green-500"></span>
                     </div>
-                    <span className="inline-block rounded-full absolute right-0 bottom-1 w-4 h-4 border border-white bg-green-500"></span>
                 </div>
                 <div className="px-2 py-1">
                     <div className="flex space-x-2">
@@ -20,7 +22,7 @@ const PostHeader = ({children}) => {
                 </div>
             </div>
             <div className="flex space-x-4">
-                <p className="text-sm text-slate-500 space-x-1 self-start py-2">
+                <p className="text-sm text-slate-500 space-x-1 self-start flex items-center py-2">
                     <BsGlobeAmericas className="inline-block"/>
                     <span>11</span>
                     <span>munite</span>

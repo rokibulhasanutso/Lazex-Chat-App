@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { LuImageOff } from "react-icons/lu";
-import imageFileReader from "../../utility/imageFileReader";
+import imageFileReader from "../../utils/imageFileReader";
 import { changeCurrentAvatar, setProfilePicture } from "../../redux/slice/profileSlice";
 import { useDispatch } from "react-redux";
 

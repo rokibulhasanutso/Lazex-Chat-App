@@ -1,8 +1,8 @@
 import { useState } from "react";
-import PostButton from "../button/PostButton";
-import PostContent from "./container/PostContent";
-import PostFooter from "./container/PostFooter";
-import PostHeader from "./container/PostHeader";
+import PostButton from "../../../components/button/PostButton";
+import PostContent from "./PostContent";
+import PostFooter from "./PostFooter";
+import PostHeader from "./PostHeader";
 
 const ImportantPost = () => {
     const [expanded, setExpanded] = useState(false)
@@ -18,11 +18,13 @@ const ImportantPost = () => {
                 onClick={handleContentExpand}
                 className="flex space-x-2 border border-slate-400 m-1 p-2 rounded-md odd:ms-8 even:me-8 select-none cursor-pointer"
               >
-                <div className="relative">
-                    <div className="w-12 h-12 border overflow-hidden rounded-full">
-                        <img src='/app_Images/profile_picture1.jpg' alt="Post Image" />
+                <div className="flex items-center">
+                    <div className="relative">
+                        <div className="w-12 h-12 border overflow-hidden rounded-full">
+                            <img src='/app_Images/profile_picture1.jpg' alt="Post Image" />
+                        </div>
+                        <span className="inline-block rounded-full absolute right-0 bottom-1 w-3 h-3 border border-white bg-green-500"></span>
                     </div>
-                    <span className="inline-block rounded-full absolute right-0 bottom-1 w-3 h-3 border border-white bg-green-500"></span>
                 </div>
                 <div className="px-1 py-.5">
                     <div className="flex space-x-1">

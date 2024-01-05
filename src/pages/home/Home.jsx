@@ -1,6 +1,6 @@
-import AdditonalPost from "../../components/PostContent/AdditonalPost";
-import ImportantPost from "../../components/PostContent/ImportantPost";
-
+import AdditonalPost from "./container/AdditonalPost";
+import ImportantPost from "./container/ImportantPost";
+import HeadText from "../../components/common/HeadText";
 
 const Home = () => {
 
@@ -8,7 +8,7 @@ const Home = () => {
         <div className="max-w-[700px] mx-auto">
             <div className="border border-slate-400 rounded-xl bg-white space-y-10">
                 <div className="">
-                    <p className="text-xl border-slate-300 rounded-md font-semibold text-slate-600 px-8 py-4">Importants for you</p>
+                    <HeadText name={'Importants for you'}/>
                     <div className="grid grid-cols-2">
                         <ImportantPost/>
                         <ImportantPost/>
@@ -18,7 +18,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div>
-                    <p className="text-xl border-slate-300 rounded-md font-semibold text-slate-600 px-8 py-4">Feed news</p>
+                    <HeadText name={'Feed news'}/>
                     <div>
                         <AdditonalPost/>
                         <AdditonalPost/>

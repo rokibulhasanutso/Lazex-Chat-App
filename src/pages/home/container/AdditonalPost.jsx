@@ -1,7 +1,7 @@
-import PostContent from "./container/PostContent";
-import PostFooter from "./container/PostFooter";
-import PostHeader from "./container/PostHeader";
-import PostButton from './../button/PostButton';
+import PostContent from "./PostContent";
+import PostFooter from "./PostFooter";
+import PostHeader from "./PostHeader";
+import PostButton from '../../../components/button/PostButton';
 
 const AdditonalPost = () => {
     return (

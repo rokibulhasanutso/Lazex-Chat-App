@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import cropImage from '../../../utility/cropImage';
-import imageFileReader from '../../../utility/imageFileReader';
 import { changeCurrentAvatar, setProfilePicture } from '../../../redux/slice/profileSlice';
 import Cropper from 'react-easy-crop';
 import { BiSolidImage } from "react-icons/bi";
-import imageCompression from './../../../utility/imageCompression';
+import cropImage from '../../../utils/cropImage';
+import imageFileReader from '../../../utils/imageFileReader';
+import imageCompression from '../../../utils/imageCompression';
 
 const ProfileImageSection = () => {
 

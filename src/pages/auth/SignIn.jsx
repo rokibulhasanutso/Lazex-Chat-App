@@ -9,7 +9,7 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../redux/slice/authSlice";
-import setlocalStorage from "../../utility/setLocalStorage";
+import setlocalStorage from "../../utils/setLocalStorage";
 
 const SignIn = () => {
     

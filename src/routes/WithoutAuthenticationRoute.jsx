@@ -1,6 +1,6 @@
 import { Navigate, Outlet} from "react-router-dom";
 // import { useSelector } from "react-redux";
-import getlocalStorage from "../utility/getLocalStorage";
+import getlocalStorage from "../utils/getLocalStorage";
 
 const WithoutAuthenticationRoute = () => {
     

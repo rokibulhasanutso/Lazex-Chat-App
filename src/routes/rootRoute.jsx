@@ -3,10 +3,10 @@ import PrivateRoute from "./PrivateRoute";
 import SignUp from './../pages/auth/SignUp';
 import SignIn from './../pages/auth/SignIn';
 import DashboardLayout from '../layouts/DashboardLayout';
-import Home from "../pages/dashboard/Home";
-import Messages from "../pages/dashboard/Messages";
-import Notification from './../pages/dashboard/Notification';
-import Setting from "../pages/dashboard/Setting";
+import Home from "../pages/home/Home";
+import Messages from "../pages/message/Messages";
+import Notification from '../pages/notification/Notification';
+import Setting from "../pages/setting/Setting";
 import ResetPassword from "../pages/auth/ResetPassword";
 import WithoutAuthenticationRoute from "./WithoutAuthenticationRoute";
 

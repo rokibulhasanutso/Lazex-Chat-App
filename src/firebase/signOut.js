@@ -1,6 +1,6 @@
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "./firebaseConfig";
-import setlocalStorage from "../utility/setLocalStorage";
+import setlocalStorage from "../utils/setLocalStorage";
 
 const userSignOut = (callback) => {
     const auth = getAuth(app);
