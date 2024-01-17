@@ -1,8 +1,7 @@
-import InterSectionObserver from "../InterSectionObserver";
 
 const Messages = () => {
     return (
-        <InterSectionObserver/>
+        <div>Messanger</div>
     );
 };
 

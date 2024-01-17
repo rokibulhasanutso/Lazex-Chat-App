@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         'app-primary': '#5F35F5',
-      }
+      },
     },
 
     fontFamily: {
