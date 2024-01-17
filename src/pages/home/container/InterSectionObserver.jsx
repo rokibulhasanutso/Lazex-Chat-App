@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuid_v4 } from 'uuid'
-import AdditonalPost from "./home/container/AdditonalPost";
-import CreatePost from './home/container/CreatePost';
+import AdditonalPost from "./AdditonalPost";
+import CreatePost from './CreatePost';
 
 const InterSectionObserver = ({activeCreatePost, closeContent}) => {
     const [activeElement, setActiveElement] = useState(0)

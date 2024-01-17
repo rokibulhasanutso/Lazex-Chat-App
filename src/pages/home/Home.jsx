@@ -3,7 +3,7 @@ import HeadText from "../../components/common/HeadText";
 import { PiCirclesThreePlusFill } from "react-icons/pi";
 import { IoSearchSharp } from "react-icons/io5";
 import { useState } from "react";
-import InterSectionObserver from "../InterSectionObserver";
+import InterSectionObserver from "./container/InterSectionObserver";
 
 const Home = () => {
     const [activeCreatePost, setActiveCreatePost] = useState(false)
