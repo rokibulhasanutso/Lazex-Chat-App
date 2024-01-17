@@ -9,6 +9,9 @@ const AppModal = () => {
     const dispatch = useDispatch()
     const modalRef = useRef(null)
 
+    // allModalState just carry modals true false boolean 
+    // and find method check which modal boolean first is true 
+    // and return modalActive true other ways false
     const modalActive = Object.values(allModalState).find((modalState) => modalState)
     const { imageProfileModal, signoutModal } = allModalState
 
@@ -21,14 +24,23 @@ const AppModal = () => {
 
         window.addEventListener('click', clickWithoutModal)
         return () => { window.removeEventListener('click', clickWithoutModal) }
-    }, [])
+    }, [dispatch])
+
+    useEffect(() => {
+        if (modalActive) {
+            document.documentElement.style.overflowY = 'hidden'
+        }
+        else {
+            document.documentElement.style.overflowY = ''
+        }
+    }, [modalActive])
 
     return (
         <>{
             modalActive &&
             <div 
                 ref={modalRef}
-                className={`fixed ${ modalActive ? 'scale-100' : 'scale-75'} transition-all z-[999] bg-black/75 inset-0 flex justify-center items-center`}
+                className={`fixed z-[999] bg-black/75 inset-0 flex justify-center items-center`}
             >
                 { imageProfileModal && <ProfileModal/> }
                 { signoutModal && <SignoutModal/> }

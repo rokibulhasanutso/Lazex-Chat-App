@@ -1,7 +1,9 @@
 
 const Messages = () => {
     return (
+        <>
         <div>Messanger</div>
+        </>
     );
 };
 
