@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { showImageProfileModal } from '../../../redux/slice/modalSlice';
 import { IoIosCloseCircle } from 'react-icons/io';
-import ProfileImageSection from './ProfileImageSection';
-import ProfileUserDetails from './ProfileUserDetails';
+import ProfileImageSection from './container/ProfileImageSection';
+import ProfileUserDetails from './container/ProfileUserDetails';
 import { useEffect, useRef, useState } from 'react';
 import DraggableImageUploader from '../../common/DraggableImageUploader';
 
@@ -21,7 +21,7 @@ const ProfileModal = () => {
 
             <div className=''>
                 <div className=" px-4 py-2.5 border-b flex justify-between items-center">
-                    <p className="font-semibold text-slate-600">Image cropper</p>
+                    <p className="font-semibold text-slate-600">Your profile bio</p>
 
                     <button 
                         onClick={() => dispatch(showImageProfileModal(false))}

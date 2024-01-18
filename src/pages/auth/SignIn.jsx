@@ -81,10 +81,6 @@ const SignIn = () => {
             // console.log(response);
 
             if (response.ok) {
-                // set data on localStorage
-                setlocalStorage(response.user)
-                // data dispatched on redux authentication store
-                dispatch(setUserData(response.user));
 
                 setUserCreationMessage({ 
                     status: 'success',

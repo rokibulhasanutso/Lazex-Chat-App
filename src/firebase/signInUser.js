@@ -1,5 +1,6 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./firebaseConfig";
+import setlocalStorage from "../utils/setLocalStorage";
 
 const auth = getAuth(app);
 
@@ -9,9 +10,12 @@ const signInUser = ({email, password}, userData) => {
     .then((userCredential) => {
         const user = userCredential.user;
 
+        // set data on localStorage
+        setlocalStorage(user)
+
         userData({
             ok: true,
-            user
+            // user
         })
     })
     .catch((error) => {
@@ -31,4 +35,3 @@ const signInUser = ({email, password}, userData) => {
 
 export default signInUser
 
-// auth/invalid-credential

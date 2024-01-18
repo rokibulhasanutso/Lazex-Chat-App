@@ -1,6 +1,6 @@
 const setlocalStorage = (data) => {
     localStorage.setItem(
-        'lazex_user', 
+        'lazex_user_info', 
         JSON.stringify(data)
     );
 }

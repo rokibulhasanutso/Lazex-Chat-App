@@ -13,24 +13,22 @@ const cropImage = (image, cropX, cropY, cropWidth, cropHeight) => {
     canvas.height = cropHeight
 
     canvasContext.drawImage(
-        newImage, 
-        cropX, 
-        cropY, 
-        cropWidth, 
-        cropHeight, 
-        0, 
+        newImage,
+        cropX,
+        cropY,
+        cropWidth,
+        cropHeight,
+        0,
         0,
         cropWidth,
         cropHeight
     )
 
-    canvas.toBlob((blob) => {
-
+    canvasContext.canvas.toBlob((blob) => {
         console.log({
             imageSize: ((blob.size / 1024) / 1024).toFixed(2) + ' MB',
             imageUrl: URL.createObjectURL(blob)
         })
-
     }, 'image/jpeg', 100)
 }
 

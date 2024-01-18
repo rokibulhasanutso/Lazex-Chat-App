@@ -18,13 +18,13 @@ const imageCompression = (imageDataUrl, width, compressImageCallBack) => {
         // const new_image = document.createElement('img');
         // new_image.src = context.canvas.toDataURL('image/jpeg', 90)
         context.canvas.toBlob((blob) => {
-
             compressImageCallBack({
-                imageSize: (blob.size / 1024).toFixed(2),
-                imageBlobUrl: URL.createObjectURL(blob),
-                imageBlob: blob,
+                size: (blob.size / 1024).toFixed(2),
+                blobUrl: URL.createObjectURL(blob),
+                blob: blob,
+                data: context.canvas.toDataURL('image/jpeg', 90)
+                
             })
-            
         }, 'image/jpeg', 100)
 
         // compressImageCallBack(imgdata)

@@ -3,12 +3,36 @@ import { MdPublic } from "react-icons/md";
 import { FaUsers, FaLock } from "react-icons/fa";
 import { RiImageAddFill } from "react-icons/ri";
 import { GrClose } from "react-icons/gr";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import ConfirmationModal from '../../../components/modal/confirmationModal/ConfirmationModal';
 
 const CreatePost = ({closeContent, componentRef}) => {
     const [postAudience, setPostAudience] = useState({audience: 'public', edit: false});
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+
+    useEffect(() => {
+        const whenClickOutSideOfContent = (e) => {
+            if (!componentRef.current?.contains(e.target)) {
+                !showConfirmModal && setShowConfirmModal(true)
+            }
+        }
+        
+        window.addEventListener('mousedown', whenClickOutSideOfContent)
+        return () => {
+            window.removeEventListener('mousedown', whenClickOutSideOfContent)
+        }
+    }, [])
 
     return (
+        <>
+        {
+            showConfirmModal && 
+            <ConfirmationModal 
+                action={closeContent} 
+                modalClose={setShowConfirmModal}
+                msg={'Are you sure you cannot create a post?'}
+            />
+        }
         <div ref={componentRef} className='first:border-t-0 border-t-8 border-b-8 border-gray-100'>
             <div className="px-8">
                 <div className='flex justify-between py-4'>
@@ -89,6 +113,7 @@ const CreatePost = ({closeContent, componentRef}) => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

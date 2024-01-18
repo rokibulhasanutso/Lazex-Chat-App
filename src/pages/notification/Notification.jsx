@@ -1,8 +1,14 @@
 
+
 const Notification = () => {
+    const handleClick = () => {
+
+
+    }
+
     return (
         <div>
-            This is a notification page
+            <button className="p-2 border" onClick={handleClick}>get all users</button>
         </div>
     );
 };

@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeCurrentAvatar, setProfilePicture } from '../../../redux/slice/profileSlice';
+import { changeCurrentAvatar, setProfilePicture } from '../../../../redux/slice/profileSlice';
 import Cropper from 'react-easy-crop';
 import { BiSolidImage } from "react-icons/bi";
-import cropImage from '../../../utils/cropImage';
-import imageFileReader from '../../../utils/imageFileReader';
-import imageCompression from '../../../utils/imageCompression';
+import cropImage from '../../../../utils/cropImage';
+import imageFileReader from '../../../../utils/imageFileReader';
+import imageCompression from '../../../../utils/imageCompression';
 
 const ProfileImageSection = () => {
 
@@ -13,47 +13,27 @@ const ProfileImageSection = () => {
     const { profilePicture } = useSelector((state) => state.profileSet)
     const { currentAvatar, male, female } = useSelector((state) => state.profileSet.defaultAvater)
 
-
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
     const [croppedPixel, setCroppedPixel] = useState(null)
 
-    const onCropComplete = useCallback((croppedAreaPixels) => {
-
+    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedPixel(croppedAreaPixels)
     }, [])
 
 
     const handelImageCropped = () => {
-
         cropImage(
-            currentAvatar, 
-            croppedPixel.x, 
+            currentAvatar,
+            croppedPixel.x,
             croppedPixel.y,
-            croppedPixel.width, 
+            croppedPixel.width,
             croppedPixel.height
         )
-
-        console.log(currentAvatar)
     }
-
-
 
     const UploadProfileImage = (event) => {
         imageFileReader(event.target, ({imageData}) => {
-
-            // console.log(loading)
-            console.log(imageData);
-            // console.log(error)
-
-            imageCompression(imageData, 500, ({imageBlob}) => {
-                // console.log({imageSize, imageBlobUrl, imageBlob})
-                console.log(imageBlob)
-                console.log(event.target.files[0])
-
-                // dispatch(changeCurrentAvatar(imageBlobUrl))
-                // dispatch(setProfilePicture(imageBlobUrl))
-            })
 
             dispatch(changeCurrentAvatar(imageData))
             dispatch(setProfilePicture(imageData))

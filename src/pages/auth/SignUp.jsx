@@ -7,8 +7,6 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
 import { LuLoader2 } from "react-icons/lu";
 import createUser from '../../firebase/createUser';
-import setlocalStorage from '../../utils/setLocalStorage';
-import { setUserData } from '../../redux/slice/authSlice';
 import { useDispatch } from 'react-redux';
 
 const SignUp = () => {
@@ -181,16 +179,11 @@ const SignUp = () => {
             // here, you can submit your form data post on server
             // console.log(submissionData)
 
+            // create user on firbase auth
             createUser(submissionData, (response) => {
                 setUserCreationLoading(false)
 
-                // console.log(response);
-
                 if (response.ok) {
-                    // set data on localStorage
-                    setlocalStorage(response.user)
-                    // data dispatched on redux authentication store
-                    dispatch(setUserData(response.user));
 
                     setUserCreationMessage({ 
                         status: 'success',

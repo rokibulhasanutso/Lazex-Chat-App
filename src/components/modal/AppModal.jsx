@@ -27,6 +27,7 @@ const AppModal = () => {
     }, [dispatch])
 
     useEffect(() => {
+        // when modal is show then scroll stop or hidden
         if (modalActive) {
             document.documentElement.style.overflowY = 'hidden'
         }
