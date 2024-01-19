@@ -16,12 +16,12 @@ const ProfileModal = () => {
     }, [])
 
     return (
-        <div className="bg-white rounded-md relative overflow-hidden" ref={modalRef}>
+        <div className="bg-white rounded-md relative" ref={modalRef}>
             <DraggableImageUploader dragOverRef={parentElement}/>
 
             <div className=''>
                 <div className=" px-4 py-2.5 border-b flex justify-between items-center">
-                    <p className="font-semibold text-slate-600">Your profile bio</p>
+                    <p className="font-semibold text-slate-600">Your profile info</p>
 
                     <button 
                         onClick={() => dispatch(showImageProfileModal(false))}
@@ -41,7 +41,7 @@ const ProfileModal = () => {
                 </div>
 
                 {/* cancel or save button */}
-                <div className="px-4 py-2 border-t text-end space-x-2">
+                {/* <div className="px-4 py-2 border-t text-end space-x-2">
                     <button 
                         onClick={() => dispatch(showImageProfileModal(false))}
                         className='px-4 py-2 rounded-md font-semibold bg-slate-200 text-slate-700 active:opacity-75'
@@ -53,7 +53,7 @@ const ProfileModal = () => {
                     >
                         Save
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );

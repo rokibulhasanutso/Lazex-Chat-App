@@ -40,7 +40,6 @@ const createUser = ({name, email, password}, userData) => {
             }
         })
     })
-
 }
 
 export default createUser

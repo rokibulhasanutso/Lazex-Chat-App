@@ -3,14 +3,14 @@ import { FiEdit } from "react-icons/fi";
 import { RxCalendar } from "react-icons/rx";
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
+import { useSelector } from "react-redux";
 
 const ProfileUserDetails = () => {
     const [datePickerOpen, setDatePickerOpen] = useState(false);
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(new Date());
+    const { userInfo } = useSelector((state) => state.profileSet)
 
     const dayPickerRef = useRef()
-
-    // console.log(selected)
 
     const [bio, setBio] = useState({
         edit: false,
@@ -19,21 +19,27 @@ const ProfileUserDetails = () => {
 
     const [personalInfo, setPersonalInfo] = useState({
         edit: false,
-        data: {
-            name: 'Rokibul Hasan',
-            email: 'rokibulhasanUtsoo@gmail.com',
-            birthOfDate: 'Dec 12, 2023',
-            gender: 'male',
-            phone: '01812410135'
-        }
+        data: userInfo
     })
+
+    const changePersonalInfo = (e) => {
+        const {name, value} = e.target
+
+        setPersonalInfo({
+            ...personalInfo,
+            data: {...personalInfo.data, [name]:value},
+        })
+    }
+
+    const personalInfoEditCancel = () => {
+        setPersonalInfo({edit: false, data:userInfo})
+    }
 
     useEffect(() => {
         const dayPickerClose = (event) => {
             if (datePickerOpen) { 
                 if (!dayPickerRef.current.contains(event.target)) {
                     setDatePickerOpen(false);
-                    // console.log('picker close');
                 }
             }
         }
@@ -68,54 +74,72 @@ const ProfileUserDetails = () => {
 
                 <div className="relative group/infoEdit border border-slate-300 hover:border-app-primary py-2 px-4 rounded-md">
                     <p className="text-center text-xl font-semibold">Personal info</p>
+                    
                     {/* edit button */}
                     <button 
-                        onClick={() => setPersonalInfo({...personalInfo , edit: true})}
+                        onClick={() => setPersonalInfo({...personalInfo, edit: true})}
                         className="absolute top-1 right-1 invisible group-hover/infoEdit:visible group-hover/infoEdit:bg-app-primary group-hover/infoEdit:text-white group-hover/infoEdit:active:bg-app-primary/75 rounded-full p-2"
                     >
                         <FiEdit/>
                     </button>
-                    <div className="py-1">
+                    
+                    {/* form field */}
+                    <div className="py-4 space-y-2">
+                        {/* name field */}
                         <div className="text-xl py-1">
                             <span className="w-32 inline-block">Name : </span>
                             {
                                 personalInfo.edit
                                 ? <input 
                                     type="text" 
-                                    value={personalInfo.data.name} 
+                                    value={personalInfo.data.name}
+                                    name="name"
+                                    onChange={changePersonalInfo}
                                     className="border-2 border-app-primary outline-app-primary px-2 py-1 rounded-md"
                                   />
-                                : <span>{personalInfo.data.name}</span>
+                                : <span className="ms-2">{personalInfo.data?.name}</span>
                             }
                         </div>
-                        <div className="text-xl py-2">
+
+                        {/* email field */}
+                        <div className="text-xl py-1">
                             <span className="w-32 inline-block">Email : </span>
                             {
                                 personalInfo.edit
                                 ? <input 
                                     type="text" 
-                                    value={personalInfo.data.email} 
+                                    value={personalInfo.data.email}
+                                    name="email"
+                                    onChange={changePersonalInfo}
                                     className="border-2 border-app-primary outline-app-primary px-2 py-1 rounded-md"
                                   />
-                                : <span>{personalInfo.data.email}</span>
+                                : <span className="ms-2">{personalInfo.data?.email}</span>
                             }
                         </div>
+
+                        {/* date of birth */}
                         <div className="text-xl py-1">
-                            <span className=" w-32 inline-block">Bith of date : </span>
+                            <span className="w-32 inline-block">Date of birth : </span>
                             <div className="relative inline-block">
-                                <span>Dec 12, 2023</span>
+                                <span className="ms-2">{
+                                    personalInfo.data?.bithdate || personalInfo.edit 
+                                    ? format(selected, 'PP')
+                                    : <span className="text-gray-400 font-normal capitalize">update birth date</span>
+                                }</span>
+                                
                                 {
                                     personalInfo.edit &&
                                     <div className="inline-block">
                                         <button
                                             onClick={() => setDatePickerOpen(!datePickerOpen)}
-                                            className="ms-1 p-1 bg-app-primary active:bg-app-primary/75 rounded-md text-white"
+                                            className="ms-2 p-1 bg-app-primary active:bg-app-primary/75 rounded-md text-white"
                                         >
                                             <RxCalendar/>
                                         </button>
+
                                         {
                                             datePickerOpen &&
-                                            <div ref={dayPickerRef} >
+                                            <div ref={dayPickerRef} className="absolute !m-auto left-1/2 -translate-x-1/2">
                                                 <style>
                                                 {`
                                                     .dayPicker-selected:not([disabled]) { 
@@ -125,7 +149,8 @@ const ProfileUserDetails = () => {
                                                     }
                                                     .dayPicker-selected:hover:not([disabled]) { 
                                                         background-color: #5F35F5 !important;
-                                                        color: #FFFFFF;
+                                                        color: #FFFFFF;import { useSelector } from 'react-redux';
+
                                                     }
                                                     .dayPicker-selected:hover { 
                                                         background-color: #5F35F5;
@@ -138,10 +163,16 @@ const ProfileUserDetails = () => {
                                                 `}
                                                 </style>
                                                 <DayPicker
-                                                    className="absolute top-4 -left-5 shadow-2xl bg-white border rounded-md p-2 border-app-primary"
+                                                    className="!mt-2 shadow-2xl bg-white border rounded-md p-2 border-app-primary"
                                                     mode="single"
                                                     selected={selected}
-                                                    onSelect={setSelected}
+                                                    onSelect={(e) => {
+                                                        setSelected(e), 
+                                                        setPersonalInfo({
+                                                            ...personalInfo,
+                                                            data: {...personalInfo.data, bithdate: format(selected, 'PP')}
+                                                        }) 
+                                                    }}
                                                     captionLayout="dropdown-buttons"
                                                     fromYear={1971}
                                                     toDate={new Date()}
@@ -156,27 +187,31 @@ const ProfileUserDetails = () => {
                                 }
                             </div>
                         </div>
+
+                        {/* gender field */}
                         <div className="text-xl py-1 flex">
                             <span className="w-32 inline-block">Gender : </span>
                             {
                                 personalInfo.edit
                                 ? <div className="flex space-x-3">
                                     <p
-                                        // onClick={() => j}
-                                        className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data.gender === 'male' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
+                                        onClick={() => setPersonalInfo({...personalInfo, data: { ...personalInfo.data, gender: 'male'}})}
+                                        className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data?.gender === 'male' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
                                     >male</p>
                                     <p
-                                        // onClick={() => j}
-                                        className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data.gender === 'female' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
+                                        onClick={() => setPersonalInfo({...personalInfo, data: { ...personalInfo.data, gender: 'female'}})}
+                                        className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data?.gender === 'female' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
                                     >female</p>
                                     <p
-                                        // onClick={() => j}
-                                        className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data.gender === 'others' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
+                                        onClick={() => setPersonalInfo({...personalInfo, data: { ...personalInfo.data, gender: 'others'}})}
+                                        className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data?.gender === 'others' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
                                     >others</p>
                                   </div>
-                                : <span className="capitalize">{personalInfo.data.gender}</span>
+                                : <span className="capitalize ms-2">{personalInfo.data.gender || <span className="text-gray-400">update gender</span>}</span>
                             }
                         </div>
+
+                        {/* contact number field */}
                         <div className="text-xl py-1">
                             <span className="w-32 inline-block">Phone : </span>
                             {
@@ -184,12 +219,32 @@ const ProfileUserDetails = () => {
                                 ? <input 
                                     type="text" 
                                     value={personalInfo.data.phone}
+                                    placeholder="+8801 xxxxxxxxx"
                                     className="border-2 border-app-primary outline-app-primary px-2 py-1 rounded-md"
                                 />
-                                : <span>{personalInfo.data.phone}</span>
+                                : <span className="ms-2">{personalInfo.data.phone || <span className="text-gray-400">+8801 xxxxxxxxx</span>}</span>
                             }
                         </div>
                     </div>
+
+                    {/* action field */}
+                    {
+                        personalInfo.edit &&
+                        <div className="flex gap-x-2 justify-end mt-2">
+                            <button 
+                                onClick={personalInfoEditCancel}
+                                className="border rounded-md bg-slate-100 px-3 py-1 text-sm text-gray-500 font-semibold"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={() => {}}
+                                className="border rounded-md bg-app-primary px-3 py-1 text-sm text-white font-semibold"
+                            >
+                                Update
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
 

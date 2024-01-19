@@ -10,7 +10,7 @@ export const profileSlice = createSlice({
             currentAvatar: '/avater/avater_f_1.jpg',
         },
         profilePicture: [],
-
+        userInfo: null
     },
 
     reducers: {
@@ -22,10 +22,14 @@ export const profileSlice = createSlice({
         
         changeCurrentAvatar: (state, actions) => {
             state.defaultAvater.currentAvatar = actions.payload
+        },
+
+        setUserInfo: (state, actions) => {
+            state.userInfo = actions.payload
         }
     },
 })
 
-export const { setProfilePicture , changeCurrentAvatar } = profileSlice.actions;
+export const { setProfilePicture , changeCurrentAvatar, setUserInfo } = profileSlice.actions;
 
 export default profileSlice.reducer;
