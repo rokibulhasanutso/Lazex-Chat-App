@@ -10,7 +10,7 @@ export const profileSlice = createSlice({
             currentAvatar: '/avater/avater_f_1.jpg',
         },
         profilePicture: [],
-        userInfo: null
+        userPersonalInfo: null,
     },
 
     reducers: {
@@ -25,7 +25,11 @@ export const profileSlice = createSlice({
         },
 
         setUserInfo: (state, actions) => {
-            state.userInfo = actions.payload
+            state.userPersonalInfo = actions.payload
+        },
+
+        setUserbio: (state, actions) => {
+            state.userBio = actions.payload
         }
     },
 })

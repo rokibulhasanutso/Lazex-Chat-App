@@ -4,24 +4,44 @@ import { RxCalendar } from "react-icons/rx";
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import { useSelector } from "react-redux";
+import { dbUserRef } from "../../../../firebase/realtimeDatabaseFunctions";
+import { RiLoader4Line } from "react-icons/ri";
+import { update } from "firebase/database";
 
 const ProfileUserDetails = () => {
+    const { userPersonalInfo} = useSelector((state) => state.profileSet)
+    const [bio, setBio] = useState({ edit: false, data: userPersonalInfo?.userBio })
+    const [bioloading, setBioloading] = useState(false)
+    const [personalInfo, setPersonalInfo] = useState({ edit: false, data: userPersonalInfo})
+    const [personalInfoLoading, setPersonalInfoLoading] = useState(false)
     const [datePickerOpen, setDatePickerOpen] = useState(false);
-    const [selected, setSelected] = useState(new Date());
-    const { userInfo } = useSelector((state) => state.profileSet)
-
+    const [selected, setSelected] = useState(new Date(userPersonalInfo?.bithdate));
     const dayPickerRef = useRef()
 
-    const [bio, setBio] = useState({
-        edit: false,
-        data: 'I am learning web development. I learned the frontend part of web development very well with React.'
-    })
+    // user bio functions start
+    const changeBio = (e) => {
+        setBio({...bio, data: e.target.value})
+    }
 
-    const [personalInfo, setPersonalInfo] = useState({
-        edit: false,
-        data: userInfo
-    })
+    const bioContentEditCancel = () => {
+        setBio({edit: false, data: userPersonalInfo.userBio})
+    }
 
+    const updateBio = () => {
+        setBioloading(true)
+
+        update(dbUserRef() , { userBio : bio.data }) // update realtime database firbase
+        .then(() => {
+            setBioloading(false)
+            setBio({...bio, edit: false})
+        })
+        .catch(() => {
+            setBioloading(false)
+        })
+    }
+    // user bio functions end
+
+    // personal info functions start
     const changePersonalInfo = (e) => {
         const {name, value} = e.target
 
@@ -32,9 +52,24 @@ const ProfileUserDetails = () => {
     }
 
     const personalInfoEditCancel = () => {
-        setPersonalInfo({edit: false, data:userInfo})
+        setPersonalInfo({edit: false, data:userPersonalInfo})
     }
 
+    const updatePersonalInfo = () => {
+        setPersonalInfoLoading(true)
+
+        update(dbUserRef() , personalInfo.data) // update realtime database firbase
+        .then(() => {
+            setPersonalInfoLoading(false)
+            setPersonalInfo({...personalInfo, edit: false})
+        })
+        .catch(() => {
+            setPersonalInfoLoading(false)
+        })
+    }
+    // personal info functions end
+
+    // date picker contain or not 
     useEffect(() => {
         const dayPickerClose = (event) => {
             if (datePickerOpen) { 
@@ -51,8 +86,11 @@ const ProfileUserDetails = () => {
     return (
         <div className="min-w-[400px]">
             <div className="space-y-4">
+
+                {/* user bio content */}
                 <div className={`relative ${!bio.edit ? 'group/bioEdit hover:border-app-primary' : ''} py-2 px-4 border border-slate-300 rounded-md`}>
                     <p className="text-center text-xl font-semibold">Bio</p>
+                    
                     {/* edit button */}
                     <button 
                         onClick={() => setBio({...bio, edit: true})}
@@ -60,18 +98,52 @@ const ProfileUserDetails = () => {
                     >
                         <FiEdit/>
                     </button>
+
+                    {/* bio input field */}
                     {
                         bio.edit
-                        ? <textarea className="max-w-[400px] h-32 w-full outline-app-primary border-2 border-app-primary rounded-md px-2 py-1 text-center text-lg ">
-                            {bio.data}
-                          </textarea>
-
+                        ? <textarea 
+                            onChange={changeBio} 
+                            className="max-w-[400px] h-32 w-full outline-app-primary border-2 border-app-primary rounded-md px-2 py-1 text-start text-lg " 
+                            placeholder="Write start here..."
+                            value={bio.data}
+                          />
                         : <p className="max-w-[400px] py-1 text-center text-lg">
-                            {bio.data}
+                            {userPersonalInfo?.userBio || <span className="text-gray-400">Write a summary about yourself...</span>}
                           </p>
+                    }
+
+                    {/* action field */}
+                    {
+                        bio.edit &&
+                        <div className="flex gap-x-2 justify-end mt-2">
+                            <button 
+                                onClick={bioContentEditCancel}
+                                className="border rounded-md bg-slate-100 px-3 py-1 text-sm text-gray-500 font-semibold"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={updateBio}
+                                className="border rounded-md bg-app-primary px-3 py-1 text-sm text-white font-semibold"
+                            >
+                                Update
+                            </button>
+                        </div>
+                    }
+
+                    {/* loading content */}
+                    {
+                        bioloading && 
+                        <div className="absolute inset-0 backdrop-blur-[1px] bg-app-primary/25 flex justify-center items-center">
+                            <span className="block">
+                                <RiLoader4Line className="animate-spin text-3xl text-blue-600"/>
+                            </span>
+                        </div>
                     }
                 </div>
 
+                {/* personal info */}
                 <div className="relative group/infoEdit border border-slate-300 hover:border-app-primary py-2 px-4 rounded-md">
                     <p className="text-center text-xl font-semibold">Personal info</p>
                     
@@ -92,12 +164,12 @@ const ProfileUserDetails = () => {
                                 personalInfo.edit
                                 ? <input 
                                     type="text" 
-                                    value={personalInfo.data.name}
+                                    value={personalInfo.data?.name}
                                     name="name"
                                     onChange={changePersonalInfo}
                                     className="border-2 border-app-primary outline-app-primary px-2 py-1 rounded-md"
                                   />
-                                : <span className="ms-2">{personalInfo.data?.name}</span>
+                                : <span className="ms-2">{userPersonalInfo?.name || <span className="text-gray-400">Set name</span>}</span>
                             }
                         </div>
 
@@ -108,12 +180,12 @@ const ProfileUserDetails = () => {
                                 personalInfo.edit
                                 ? <input 
                                     type="text" 
-                                    value={personalInfo.data.email}
+                                    value={personalInfo.data?.email}
                                     name="email"
                                     onChange={changePersonalInfo}
                                     className="border-2 border-app-primary outline-app-primary px-2 py-1 rounded-md"
                                   />
-                                : <span className="ms-2">{personalInfo.data?.email}</span>
+                                : <span className="ms-2">{personalInfo.data?.email || <span className="text-gray-400">Set email</span>}</span>
                             }
                         </div>
 
@@ -122,8 +194,8 @@ const ProfileUserDetails = () => {
                             <span className="w-32 inline-block">Date of birth : </span>
                             <div className="relative inline-block">
                                 <span className="ms-2">{
-                                    personalInfo.data?.bithdate || personalInfo.edit 
-                                    ? format(selected, 'PP')
+                                    userPersonalInfo?.bithdate || personalInfo.edit 
+                                    ? personalInfo.data?.birthdate
                                     : <span className="text-gray-400 font-normal capitalize">update birth date</span>
                                 }</span>
                                 
@@ -165,12 +237,13 @@ const ProfileUserDetails = () => {
                                                 <DayPicker
                                                     className="!mt-2 shadow-2xl bg-white border rounded-md p-2 border-app-primary"
                                                     mode="single"
-                                                    selected={selected}
-                                                    onSelect={(e) => {
-                                                        setSelected(e), 
+                                                    required
+                                                    selected={new Date(personalInfo.data?.birthdate)}
+                                                    onSelect={(date) => {
+                                                        setSelected(date), 
                                                         setPersonalInfo({
                                                             ...personalInfo,
-                                                            data: {...personalInfo.data, bithdate: format(selected, 'PP')}
+                                                            data: {...personalInfo.data, birthdate: format(date, 'PP')}
                                                         }) 
                                                     }}
                                                     captionLayout="dropdown-buttons"
@@ -180,6 +253,16 @@ const ProfileUserDetails = () => {
                                                         selected: 'dayPicker-selected',
                                                         today: 'dayPicker-today'
                                                     }}
+                                                    footer={
+                                                        <div className="">
+                                                            <button 
+                                                                onClick={() => setDatePickerOpen(false)}
+                                                                className="block border ms-auto px-4 py-1 font-semibold rounded-md bg-app-primary text-white text-sm"
+                                                            >
+                                                                OK
+                                                            </button>
+                                                        </div>
+                                                    }
                                                 />
                                             </div>
                                         }
@@ -207,7 +290,7 @@ const ProfileUserDetails = () => {
                                         className={`capitalize px-2.5 py-0.5 text-base border ${personalInfo.data?.gender === 'others' ? 'bg-app-primary text-white border-transparent select-none pointer-events-none' : 'border-slate-400 text-black cursor-pointer'} rounded-md`}
                                     >others</p>
                                   </div>
-                                : <span className="capitalize ms-2">{personalInfo.data.gender || <span className="text-gray-400">update gender</span>}</span>
+                                : <span className="capitalize ms-2">{userPersonalInfo?.gender || <span className="text-gray-400">update gender</span>}</span>
                             }
                         </div>
 
@@ -218,11 +301,13 @@ const ProfileUserDetails = () => {
                                 personalInfo.edit 
                                 ? <input 
                                     type="text" 
-                                    value={personalInfo.data.phone}
+                                    value={personalInfo.data?.phoneNumber}
+                                    name="phoneNumber"
+                                    onChange={changePersonalInfo}
                                     placeholder="+8801 xxxxxxxxx"
                                     className="border-2 border-app-primary outline-app-primary px-2 py-1 rounded-md"
                                 />
-                                : <span className="ms-2">{personalInfo.data.phone || <span className="text-gray-400">+8801 xxxxxxxxx</span>}</span>
+                                : <span className="ms-2">{userPersonalInfo?.phoneNumber || <span className="text-gray-400">+8801 xxxxxxxxx</span>}</span>
                             }
                         </div>
                     </div>
@@ -238,11 +323,21 @@ const ProfileUserDetails = () => {
                                 Cancel
                             </button>
                             <button 
-                                onClick={() => {}}
+                                onClick={updatePersonalInfo}
                                 className="border rounded-md bg-app-primary px-3 py-1 text-sm text-white font-semibold"
                             >
                                 Update
                             </button>
+                        </div>
+                    }
+
+                    {/* loading content */}
+                    {
+                        personalInfoLoading && 
+                        <div className="absolute inset-0 backdrop-blur-[1px] bg-app-primary/25 flex justify-center items-center">
+                            <span className="block">
+                                <RiLoader4Line className="animate-spin text-3xl text-blue-600"/>
+                            </span>
                         </div>
                     }
                 </div>

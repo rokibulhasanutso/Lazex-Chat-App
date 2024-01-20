@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { localStorageAuthData } from "../../utils/getLocalStorage";
 
 export const authSlice = createSlice({
   name: "authentication",
 
   initialState: {
-    userData: null,
+    userData: localStorageAuthData,
     isAuthenticated: false,
   },
 
