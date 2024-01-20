@@ -15,7 +15,6 @@ const ProfileUserDetails = () => {
     const [personalInfo, setPersonalInfo] = useState({ edit: false, data: userPersonalInfo})
     const [personalInfoLoading, setPersonalInfoLoading] = useState(false)
     const [datePickerOpen, setDatePickerOpen] = useState(false);
-    const [selected, setSelected] = useState(new Date(userPersonalInfo?.bithdate));
     const dayPickerRef = useRef()
 
     // user bio functions start
@@ -239,8 +238,7 @@ const ProfileUserDetails = () => {
                                                     mode="single"
                                                     required
                                                     selected={new Date(personalInfo.data?.birthdate)}
-                                                    onSelect={(date) => {
-                                                        setSelected(date), 
+                                                    onSelect={(date) => { 
                                                         setPersonalInfo({
                                                             ...personalInfo,
                                                             data: {...personalInfo.data, birthdate: format(date, 'PP')}
