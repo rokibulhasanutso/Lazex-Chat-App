@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
 import ImageUploader from "../../components/common/ImageUploader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showSignoutModal } from "../../redux/slice/modalSlice";
 
 const SideNav = () => {
+    const { userProfilePicture } = useSelector((state) => state.profileSet)
     const dispatch = useDispatch()
 
     const handleSignOut = () => {
@@ -19,7 +20,7 @@ const SideNav = () => {
                         <div className="relative">
                             <div className="relative">
                                 <div className=" relative z-10 peer group/profile w-[100px] h-[100px] mx-auto overflow-hidden rounded-full">
-                                    <img src="/app_Images/profile_picture.jpg" alt="Profile Picture" />
+                                    <img src={userProfilePicture?.md} alt="Profile Picture" />
 
                                     {/* <div className="border-[6px] rounded-full border-white/50 absolute inset-0"></div> */}
                                     <ImageUploader className={'hidden group-hover/profile:block'}/>

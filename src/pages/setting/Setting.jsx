@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useImageUploader from "../../hooks/useImageUploader";
+import imageFileReader from "../../utils/imageFileReader";
 
 const Setting = () => {
     const {uploadImage, progress} = useImageUploader()
@@ -7,7 +8,9 @@ const Setting = () => {
     const [imagefile, setImagefile] = useState(null)
 
     const handleChange = (e) => {
-        setImagefile(e.target)
+        imageFileReader(e.target.files[0], ({imageData}) => {
+            setImagefile(imageData)
+        })
     }
 
     const handleUpload = () => {
@@ -15,6 +18,8 @@ const Setting = () => {
             image: imagefile,
             path: 'profile_picture',
             size: { sm: 64, md: 100, lg: 1024 },
+        }).then((imageUrl) => {
+            console.log(imageUrl)
         })
     }
 

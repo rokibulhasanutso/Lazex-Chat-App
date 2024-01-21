@@ -193,7 +193,7 @@ const ProfileUserDetails = () => {
                             <span className="w-32 inline-block">Date of birth : </span>
                             <div className="relative inline-block">
                                 <span className="ms-2">{
-                                    userPersonalInfo?.bithdate || personalInfo.edit 
+                                    userPersonalInfo?.birthdate || personalInfo.edit 
                                     ? personalInfo.data?.birthdate
                                     : <span className="text-gray-400 font-normal capitalize">update birth date</span>
                                 }</span>

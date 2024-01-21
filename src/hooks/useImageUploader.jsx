@@ -8,35 +8,33 @@ import imageCompression from '../utils/imageCompression';
 const useImageUploader = () => {
     const [progress, setprogress] = useState(0)
 
-    const uploadImageData = async (data, imagePath, imageName, size) => {  
+    const uploadImageData = async (data, imagePath, imageName, sizeValue, index, sizeLength) => {  
         return await new Promise((resolve) => {
-            imageFileReader(data, (returnData) => {
-                imageCompression(returnData.imageData, size, ({blob}) => {
+            imageCompression(data, sizeValue, ({blob}) => {
 
-                    const uploadImgRef = () => ref(getStorage(app), `${uid}/${imagePath}/${imageName}`)
-                    const uploadImage = uploadBytesResumable(uploadImgRef() , blob)
+                const uploadImgRef = () => ref(getStorage(app), `${uid}/${imagePath}/${imageName}`)
+                const uploadImage = uploadBytesResumable(uploadImgRef() , blob)
 
-                    uploadImage.on( 'state_changed',
-                        {
-                            'next': (snapshot) => {
-                                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                                // console.log(progress)
-                                setprogress(progress);
-                            },
+                // upload of progress
+                uploadImage.on( 'state_changed',
+                    {
+                        'next': (snapshot) => {
+                            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                            setprogress(((index * 100) + progress) / sizeLength);
+                        },
 
-                            'error': (error) => {
-                                console.error(error.message);
-                            },
+                        'error': (error) => {
+                            console.error(error.message);
+                        },
 
-                            'complete': () => {
-                                getDownloadURL(uploadImage.snapshot.ref)
-                                .then((downloadUrl) => {
-                                    resolve(downloadUrl)
-                                })
-                            }
+                        'complete': () => {
+                            getDownloadURL(uploadImage.snapshot.ref)
+                            .then((downloadUrl) => {
+                                resolve(downloadUrl)
+                            })
                         }
-                    );
-                })
+                    }
+                );
             })
         })
     }
@@ -48,18 +46,21 @@ const useImageUploader = () => {
 
             const key = Object.keys(imageContainer.size)[index]
             const value = Object.values(imageContainer.size)[index]
+            const sizeLength = Object.values(imageContainer.size).length
 
             const data = await uploadImageData(
                 imageContainer.image, 
                 imageContainer.path,
-                key,
-                value
+                key, // object property name or image name
+                value, // object property value or image size
+                index,
+                sizeLength
             )
 
             allSizeImageUrl[key] = data
         }
 
-        console.log(allSizeImageUrl)
+        return allSizeImageUrl
     }
 
     return {

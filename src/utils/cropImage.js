@@ -1,5 +1,5 @@
 
-const cropImage = (image, cropX, cropY, cropWidth, cropHeight) => {
+const cropImage = async (image, cropX, cropY, cropWidth, cropHeight) => {
     
     // create New Image object
     const newImage = new Image();
@@ -24,12 +24,17 @@ const cropImage = (image, cropX, cropY, cropWidth, cropHeight) => {
         cropHeight
     )
 
-    canvasContext.canvas.toBlob((blob) => {
-        console.log({
-            imageSize: ((blob.size / 1024) / 1024).toFixed(2) + ' MB',
-            imageUrl: URL.createObjectURL(blob)
-        })
-    }, 'image/jpeg', 100)
+    return await new Promise((resolve) => {
+        canvasContext.canvas.toBlob((blob) => {
+            resolve ({
+                imageSize: ((blob.size / 1024) / 1024).toFixed(2) + ' MB',
+                imageUrl: URL.createObjectURL(blob),
+                blob,
+                data: canvasContext.canvas.toDataURL('image/jpeg', 90)
+            })
+        }, 'image/jpeg', 100)
+    })
+    
 }
 
 export default cropImage

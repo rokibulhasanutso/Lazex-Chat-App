@@ -1,23 +1,20 @@
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeCurrentAvatar, setProfilePicture } from '../../../../redux/slice/profileSlice';
+import { changeCurrentProfilePicture, setProfilePicture } from '../../../../redux/slice/profileSlice';
 import Cropper from 'react-easy-crop';
-import { CircularProgressbar, CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import { BiSolidImage } from "react-icons/bi";
+import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import cropImage from '../../../../utils/cropImage';
 import imageFileReader from '../../../../utils/imageFileReader';
-import imageCompression from '../../../../utils/imageCompression';
 import { FiPlus } from 'react-icons/fi';
-import { getDownloadURL, getStorage, uploadBytesResumable } from 'firebase/storage';
-import { ref } from 'firebase/database';
-import { app } from '../../../../firebase/firebaseConfig';
-import { v4 as uuid } from 'uuid';
+import useImageUploader from '../../../../hooks/useImageUploader';
+import { update } from 'firebase/database';
+import { dbImageRef } from './../../../../firebase/realtimeDatabaseFunctions';
 
 const ProfileImageSection = () => {
 
     const dispatch = useDispatch()
-    const { profilePicture } = useSelector((state) => state.profileSet)
-    const { currentAvatar, male, female } = useSelector((state) => state.profileSet.defaultAvater)
+    const { profilePicture, currentProfilePicture } = useSelector((state) => state.profileSet)
+    const { male, female } = useSelector((state) => state.profileSet.defaultAvater)
 
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [zoom, setZoom] = useState(1)
@@ -26,70 +23,58 @@ const ProfileImageSection = () => {
     const [imgUploadLoading, setImgUploadLoading] = useState(false)
     const [imgselectLoading, setImgselectLoading] = useState(false)
 
-    const [image, setImage] = useState(null);
-    const [progress, setProgress] = useState(0);
+    const { uploadImage, progress } = useImageUploader() // custom hook
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedPixel(croppedAreaPixels)
     }, [])
 
+    const selectProfileImage = (event) => {
+        imageFileReader(event.target.files[0], ({imageData}) => {
+            dispatch(changeCurrentProfilePicture(imageData))
+            dispatch(setProfilePicture(imageData))
+        })
+    }
 
-    const handelImageCropped = () => {
-        cropImage(
-            currentAvatar,
+    const imageUploadOnDatabase = async () => {
+        setImgUploadLoading(true)
+
+        const croppedImagedata = await cropImage(
+            currentProfilePicture,
             croppedPixel.x,
             croppedPixel.y,
             croppedPixel.width,
             croppedPixel.height
         )
-    }
 
-    const selectProfileImage = (event) => {
-        imageFileReader(event.target, ({imageData}) => {
-            imageCompression(imageData, 1024, ({data}) => {
-
-                console.log(data)
-                dispatch(changeCurrentAvatar(imageData))
-                dispatch(setProfilePicture(imageData))
+        // upload image on firebase storage
+        // and set image link or profile picture link on firebase realtime database
+        uploadImage({
+            image: croppedImagedata.data,
+            path: 'profile_picture',
+            size: { sm: 64, md: 100, lg: 1024 },
+        })
+        .then((imageUrl) => {
+            // update profile picture link on firebase realtime database
+            update(dbImageRef(), imageUrl)
+            .then(() => {
+                setImgUploadLoading(false)
             })
+            .catch((error) => {
+                console.error('Error: ', error);
+            })
+        })
+        .catch((error) => {
+            console.error('Error: ', error);
         })
     }
 
-    const handleChange = (e) => {
-        imageFileReader(e.target, (data) => {
-            imageCompression(data.imageData, 50, ({blob}) => {
-                setImage(blob);
-            })
-        })
-    };
-
-    const handleUpload = () => {
-        const uploadTask = uploadBytesResumable(ref(getStorage(app), uuid()), image)
-
-        uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                // console.log(progress)
-                setProgress(progress);
-            },
-            (error) => {
-                console.error(error.message);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref)
-                .then((downloadUrl) => {
-                    console.log(downloadUrl)
-                })
-            }
-        );
-    };
 
     return (
         <div className="w-[400px] h-auto relative">
-            <div className="h-[300px] relative after:border-none">
+            <div className="h-[300px] relative after:border-none max-h-none">
                 <Cropper
-                    image={currentAvatar}
+                    image={currentProfilePicture}
                     classes={{
                         containerClassName: 'rounded-md',
                         mediaClassName: '',
@@ -127,14 +112,14 @@ const ProfileImageSection = () => {
                         {/* uploaded image card */}
                         {
                             [...profilePicture, ...female, ...male]
-                                .filter(url => url !== currentAvatar)
+                                .filter(url => url !== currentProfilePicture)
                                 .map((url, index) => (
                                     <div 
                                         key={index}
                                         className="w-20 h-20 overflow-hidden border-2 border-gray-300 hover:border-app-primary cursor-pointer rounded-md bg-white">
                                         <img
                                             src={url}
-                                            onClick={() => dispatch(changeCurrentAvatar(url))}
+                                            onClick={() => dispatch(changeCurrentProfilePicture(url))}
                                             alt="Avater Image" 
                                             className="w-full h-auto"
                                             onDragStart={(event) => {event.preventDefault()}}
@@ -149,7 +134,7 @@ const ProfileImageSection = () => {
             {/* update and upload image button */}
             <div className=''>
                 <button 
-                    onClick={() => setImgUploadLoading(true)}
+                    onClick={imageUploadOnDatabase}
                     className='inline-block w-full px-6 cursor-pointer py-3 border-2 border-gray-300 hover:border-app-primary bg-gray-100 hover:bg-app-primary hover:text-white text-gray-500 transition-all font-semibold rounded-md'
                 >
                     Update Image
@@ -157,18 +142,21 @@ const ProfileImageSection = () => {
             </div>
 
             {/* image uploading on database presentational content */}
-            <div className='absolute inset-0 backdrop-blur-sm bg-app-primary/75 rounded-md flex justify-center items-center'>
-                <div className='w-28 h-28 bg-white p-4 rounded-full shadow-sm'>
-                    <CircularProgressbarWithChildren 
-                        value={progress} strokeWidth={10} 
-                        styles={{path: {stroke: "#5F35F5"}}}
-                    >
-                        <span className='text-slate-500 font-semibold text-lg'>
-                            {progress + '%'}
-                        </span>
-                    </CircularProgressbarWithChildren>
+            {
+                imgUploadLoading &&
+                <div className='absolute inset-0 backdrop-blur-sm bg-app-primary/75 rounded-md flex justify-center items-center'>
+                    <div className='w-28 h-28 bg-white p-4 rounded-full shadow-sm'>
+                        <CircularProgressbarWithChildren 
+                            value={progress} strokeWidth={10} 
+                            styles={{path: {stroke: "#5F35F5"}}}
+                        >
+                            <span className='text-slate-500 font-semibold text-lg'>
+                                {parseInt(progress) + '%'}
+                            </span>
+                        </CircularProgressbarWithChildren>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     );
 };

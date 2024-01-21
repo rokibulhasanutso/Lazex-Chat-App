@@ -1,6 +1,6 @@
 
 const imageFileReader = (readedImage, callback) => {
-    const imageBlob = readedImage.files[0];
+    const imageBlob = readedImage;
     const reader = new FileReader();
     
     const imageProccess = {

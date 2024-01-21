@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { LuImageOff } from "react-icons/lu";
 import imageFileReader from "../../utils/imageFileReader";
-import { changeCurrentAvatar, setProfilePicture } from "../../redux/slice/profileSlice";
+import { changeCurrentProfilePicture, setProfilePicture } from "../../redux/slice/profileSlice";
 import { useDispatch } from "react-redux";
 
 const DraggableImageUploader = ({dragOverRef}) => {
@@ -38,7 +38,7 @@ const DraggableImageUploader = ({dragOverRef}) => {
             // imageFileReader get an array argument
             imageFileReader(event.dataTransfer, ({imageData}) => {
                 
-                dispatch(changeCurrentAvatar(imageData))
+                dispatch(changeCurrentProfilePicture(imageData))
                 dispatch(setProfilePicture(imageData))
 
                 setShowPresentationContainer(false)

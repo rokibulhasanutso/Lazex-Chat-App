@@ -12,7 +12,7 @@ const createUser = ({name, email, password}, userData) => {
     .then((userCredential) => {
         const user = userCredential.user;
 
-        set(ref(db, `users/${user.uid}`), {
+        set(ref(db, `users/${user.uid}/userInfo`), {
             name: name,
             email: user.email,
         })
