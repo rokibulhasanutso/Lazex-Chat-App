@@ -6,6 +6,7 @@ import App from './App.jsx'
 import './index.css'
 import './App.css'
 import 'react-day-picker/dist/style.css';
+import 'react-circular-progressbar/dist/styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

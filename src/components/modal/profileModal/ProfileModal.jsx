@@ -19,7 +19,7 @@ const ProfileModal = () => {
         <div className="bg-white rounded-md relative" ref={modalRef}>
             <DraggableImageUploader dragOverRef={parentElement}/>
 
-            <div className='pb-6'>
+            <div className=''>
                 <div className=" px-4 py-2.5 border-b flex justify-between items-center">
                     <p className="font-semibold text-slate-600">Your profile info</p>
 

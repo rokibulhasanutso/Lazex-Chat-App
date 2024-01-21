@@ -1,10 +1,13 @@
 import { useState } from 'react';
-// Import the initialized Firebase storage instance
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from '../firebase/firebaseConfig';
 import imageFileReader from '../utils/imageFileReader';
 import imageCompression from '../utils/imageCompression';
 import { v4 as uuid } from 'uuid';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { localStorageAuthData } from '../utils/getLocalStorage';
+import { uid } from '../firebase/realtimeDatabaseFunctions';
 
 const storage = getStorage(app);
 
@@ -14,16 +17,18 @@ const ImageUploadComponent = () => {
 
   const handleChange = (e) => {
     imageFileReader(e.target, (data) => {
-        imageCompression(data.imageData, 50, ({blob}) => {
+        imageCompression(data.imageData, 3024, ({blob}) => {
             setImage(blob);
         })
     })
   };
 
   const handleUpload = () => {
-    const uploadTask = uploadBytesResumable(ref(storage, uuid()), image)
+    const imagePath = '/profile/profile_picture'
+    const uploadImgRef = () => ref(storage, uid + imagePath)
+    const uploadImage = uploadBytesResumable(uploadImgRef() , image)
 
-    uploadTask.on(
+    uploadImage.on(
       'state_changed',
       (snapshot) => {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
@@ -34,7 +39,7 @@ const ImageUploadComponent = () => {
         console.error(error.message);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref)
+        getDownloadURL(uploadImage.snapshot.ref)
         .then((downloadUrl) => {
             console.log(downloadUrl)
         })
