@@ -8,16 +8,17 @@ export const profileSlice = createSlice({
             male: ['/avater/avater_m_1.jpg', '/avater/avater_m_2.jpg', '/avater/avater_m_3.jpg', '/avater/avater_m_4.jpg'],
             female: ['/avater/avater_f_1.jpg', '/avater/avater_f_2.jpg', '/avater/avater_f_3.jpg', '/avater/avater_f_4.jpg'],
         },
-        currentProfilePicture: '/avater/avater_f_1.jpg',
         profilePicture: [],
         userPersonalInfo: null,
         userProfilePicture: null,
+        currentProfilePicture : '/avater/avater_f_1.jpg'
     },
 
     reducers: {
         setProfilePicture: (state, actions) => {
             if (!state.profilePicture.includes(actions.payload)) {
                 state.profilePicture.push(actions.payload)
+                state.currentProfilePicture = actions.payload
             }
         },
         
@@ -31,6 +32,11 @@ export const profileSlice = createSlice({
         
         setUserProfilePicture: (state, actions) => {
             state.userProfilePicture = actions.payload
+            state.currentProfilePicture = actions.payload.lg
+            
+            if (!state.profilePicture.includes(actions.payload.lg)) {
+                state.profilePicture.push(actions.payload.lg)
+            }
         }
     },
 })

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeCurrentProfilePicture, setProfilePicture } from '../../../../redux/slice/profileSlice';
 import Cropper from 'react-easy-crop';
@@ -13,7 +13,7 @@ import { dbImageRef } from './../../../../firebase/realtimeDatabaseFunctions';
 const ProfileImageSection = () => {
 
     const dispatch = useDispatch()
-    const { profilePicture, currentProfilePicture } = useSelector((state) => state.profileSet)
+    const { profilePicture, currentProfilePicture, userProfilePicture } = useSelector((state) => state.profileSet)
     const { male, female } = useSelector((state) => state.profileSet.defaultAvater)
 
     const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -21,7 +21,7 @@ const ProfileImageSection = () => {
     const [croppedPixel, setCroppedPixel] = useState(null)
 
     const [imgUploadLoading, setImgUploadLoading] = useState(false)
-    const [imgselectLoading, setImgselectLoading] = useState(false)
+    // const [imgselectLoading, setImgselectLoading] = useState(false)
 
     const { uploadImage, progress } = useImageUploader() // custom hook
 
@@ -31,7 +31,6 @@ const ProfileImageSection = () => {
 
     const selectProfileImage = (event) => {
         imageFileReader(event.target.files[0], ({imageData}) => {
-            dispatch(changeCurrentProfilePicture(imageData))
             dispatch(setProfilePicture(imageData))
         })
     }
@@ -68,6 +67,11 @@ const ProfileImageSection = () => {
             console.error('Error: ', error);
         })
     }
+
+    // when unmound component then reset db profile picture
+    useEffect(() => () => { 
+        dispatch(changeCurrentProfilePicture(userProfilePicture?.lg))
+    }, [userProfilePicture?.lg, dispatch])
 
 
     return (
@@ -132,7 +136,8 @@ const ProfileImageSection = () => {
             </div>
 
             {/* update and upload image button */}
-            <div className=''>
+            
+            <div className={`${currentProfilePicture === userProfilePicture?.lg ? "select-none pointer-events-none" : ""}`}>
                 <button 
                     onClick={imageUploadOnDatabase}
                     className='inline-block w-full px-6 cursor-pointer py-3 border-2 border-gray-300 hover:border-app-primary bg-gray-100 hover:bg-app-primary hover:text-white text-gray-500 transition-all font-semibold rounded-md'
