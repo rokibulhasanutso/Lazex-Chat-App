@@ -21,13 +21,15 @@ const InterSectionObserver = ({activeCreatePost, closeContent}) => {
             if (eleTopPosition >= 36) {
                 if (activeCreatePost) {
                     const scrollTopPositon = document.documentElement.scrollTop
-                    document.documentElement.scrollTop =  scrollTopPositon  + componentTopPosition - 36
+                    document.documentElement.scrollTop = scrollTopPositon  + componentTopPosition - 36
                     
                     // setTimeout use for work in firebox browser
                     setTimeout(() => {
                         document.documentElement.style.overflow = 'hidden'
-                    }, 0);
+                    }, 300);
+                    
 
+                    // remove listener couse handleReval func not call again
                     window.removeEventListener('scroll', handleReval)
                 }
                 else {

@@ -1,10 +1,7 @@
 
-import ImageUploadComponent from './../ImageUploadComponent';
 const Messages = () => {
     return (
-        <>
-        <ImageUploadComponent/>
-        </>
+        <div></div>
     );
 };
 

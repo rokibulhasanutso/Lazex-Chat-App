@@ -30,7 +30,7 @@ const CreatePost = ({closeContent, componentRef}) => {
             <ConfirmationModal 
                 action={closeContent} 
                 modalClose={setShowConfirmModal}
-                msg={'Are you sure you cannot create a post?'}
+                msg={'Are you sure you want to discard the post creation?'}
             />
         }
         <div ref={componentRef} className='first:border-t-0 border-t-8 border-b-8 border-gray-100'>

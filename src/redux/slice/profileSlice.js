@@ -32,10 +32,10 @@ export const profileSlice = createSlice({
         
         setUserProfilePicture: (state, actions) => {
             state.userProfilePicture = actions.payload
-            state.currentProfilePicture = actions.payload.lg
+            state.currentProfilePicture = actions.payload?.lg
             
-            if (!state.profilePicture.includes(actions.payload.lg)) {
-                state.profilePicture.push(actions.payload.lg)
+            if (!state.profilePicture.includes(actions.payload?.lg)) {
+                state.profilePicture.push(actions.payload?.lg)
             }
         }
     },

@@ -1,13 +1,14 @@
 import { getDatabase, ref, update } from "firebase/database"
 import { app } from "./firebaseConfig"
-import { localStorageAuthData } from "../utils/getLocalStorage"
+import { getAuth } from 'firebase/auth';
+import { localStorageAuthData } from "../utils/getLocalStorage";
 
 export const db = getDatabase(app)
-export const uid = localStorageAuthData?.uid
+export let uid = () => getAuth(app).currentUser?.uid || localStorageAuthData?.uid;
 
 // ref
 export const dbRef = (rootPath, path) => {
-   return ref(db, rootPath + '/' + uid + '/' + path)
+   return ref(db, rootPath + '/' + uid() + '/' + path)
 }
 
 export const dbUserRef = () => dbRef('users', 'userInfo')
