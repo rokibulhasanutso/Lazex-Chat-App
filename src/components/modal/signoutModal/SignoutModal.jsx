@@ -5,11 +5,13 @@ import { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiCheckCircle } from "react-icons/fi";
 import { MdOutlineErrorOutline } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const SignoutModal = () => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const [signoutStatus, setSignoutStatus] = useState('')
+    const navigate = useNavigate()
 
     const signoutAction = (action) => {
         setLoading(true)
@@ -20,7 +22,7 @@ const SignoutModal = () => {
                     setSignoutStatus(res)
                     setTimeout(() => {
                         dispatch(showSignoutModal(false))
-                        window.location.replace('/signin')
+                        navigate('/signin')
                     }, 500)
                 }
                 else if (res === 'error') {

@@ -1,40 +1,24 @@
+import ImageHeader from "./ImageHeader";
+
 const ShortMessegeContent = ({photoUrl, name, shortMessage}) => {
 
-    const nameFirstLetter = (name) => {
-        if (typeof name === 'string' && name.length > 0) {
-            return name.charAt(0).toUpperCase(); 
-        } else {
-            return null; 
-        }
-    }
 
     return (
-        <div className="flex space-x-3 hover:bg-slate-100 select-none cursor-pointer px-6 hover:py-2 py-0.5 transition-all">
-            <div className="flex items-center">
-                <div className="relative">
-                    <div className="w-12 h-12 ring-1 ring-offset-2 overflow-hidden rounded-full">
-                        {
-                            photoUrl 
-                            ? <img src={photoUrl} alt="Post Image" />
-                            : <div 
-                                className="grid place-content-center h-full bg-slate-300 text-slate-700 font-semibold text-lg"
-                              >
-                                {nameFirstLetter(name)}
-                              </div>
-                        }
-                    </div>
-                    <span className="inline-block rounded-full absolute right-0 bottom-1 w-3 h-3 border border-white bg-green-500"></span>
+        <div className="relative px-8 py-4 border-y hover:bg-white hover:after:absolute after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1 after:h-[calc(100%+2px)] after:z-10 after:-top-px after:-left-[2px]">
+            <div className="flex items-center space-x-3 select-none cursor-pointer py-0.5 transition-all">
+                {/* head image */}
+                <ImageHeader size={'sm'} photoUrl={photoUrl} name={name}/>
+
+                {/* message content */}
+                <div className="px-2 py-1 flex-1">
+                    <p className="font-semibold text-2xl">{name}</p>
+                </div>
+                <div className="items-stretch my-auto">
+                    <span className="text-sm py-1.5 text-slate-500">12:42 PM</span>
                 </div>
             </div>
-            <div className="px-2 py-1">
-                <div className="flex space-x-2">
-                    <p className="font-semibold">{name}</p>
-                </div>
-                <p className="text-base leading-5 tracking-tight py-1 text-slate-600">{shortMessage}</p>
-            </div>
-            <div>
-                <p className="text-sm py-1.5 text-slate-500">12:42 PM</p>
-            </div>
+
+            <p className="text-lg mt-2 leading-5 tracking-tight py-1 text-slate-600">{shortMessage}</p>
         </div>
     );
 };

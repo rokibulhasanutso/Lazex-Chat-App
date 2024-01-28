@@ -11,8 +11,11 @@ export const dbRef = (rootPath, path) => {
    return ref(db, rootPath + '/' + uid() + '/' + path)
 }
 
+export const dbActiveRef = () => dbRef('users', '')
 export const dbUserRef = () => dbRef('users', 'userInfo')
 export const dbImageRef = () => dbRef('users', 'profilePicture')
+export const dbFriendReqRef = (key) => ref(db, 'friends/' + key)
+export const dbNotificationRef = (key) => ref(db, 'users/' + key + '/notification')
 
 // functions 
 export const dbUpdateUserBio = (data) => {

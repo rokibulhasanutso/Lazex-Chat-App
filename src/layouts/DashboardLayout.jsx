@@ -2,11 +2,12 @@ import { Outlet } from 'react-router-dom';
 import SideNav from '../pages/dashboard/SideNav';
 import SortInfoNav from '../pages/dashboard/SortInfoNav';
 import { useEffect, useState } from 'react';
-import { onValue } from 'firebase/database';
+import { onValue, update } from 'firebase/database';
 import { useDispatch } from 'react-redux';
 import { setUserInfo, setUserProfilePicture } from '../redux/slice/profileSlice';
-import { dbImageRef, dbUserRef } from '../firebase/realtimeDatabaseFunctions';
+import { dbActiveRef, dbImageRef, dbUserRef } from '../firebase/realtimeDatabaseFunctions';
 import SplashScreen from '../components/splashLoadingScreen/SplashScreen';
+import AppModal from '../components/modal/AppModal';
 
 const DashboardLayout = () => {
     const dispatch =  useDispatch()
@@ -28,13 +29,32 @@ const DashboardLayout = () => {
                 // this state use for show dashboard after get all data and update redux state
                 setDataFetchComplete(true)
             })
-        
+
     }, [dispatch])
+
+    // user active status activity
+    useEffect(() => {
+        // dashboard component when mount sand database sataus active
+        update(dbActiveRef(), {active: true})
+
+        const activeStatusFalse = () => {
+            update(dbActiveRef(), {active: false})
+        }
+        // when window close then active status false
+        window.addEventListener('beforeunload', activeStatusFalse)
+
+        return () => {
+            // when unmount then active status false
+            activeStatusFalse()
+            window.removeEventListener('beforeunload', activeStatusFalse)
+        }
+    }, [])
 
     return (
         <>{
             dataFetchComplete 
-            ? <div className='bg-gray-100'>
+            ? 
+            <><div className='bg-gray-100'>
                 <div className='flex px-8 justify-between'>
                     <SideNav/>
                     <div className='m-9 flex-grow'>
@@ -43,6 +63,9 @@ const DashboardLayout = () => {
                     <SortInfoNav/>
                 </div>
               </div>
+              
+              {/* all modal open in AppModal component */}
+              <AppModal/></>
 
             : <SplashScreen/>
         }</>
