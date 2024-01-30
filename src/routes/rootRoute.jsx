@@ -30,7 +30,7 @@ const rootRoute = createBrowserRouter(
             <Route path="/" element={<PrivateRoute/>}>
                 <Route path="/" element={<Suspense fallback={<SplashScreen/>}><DashboardLayout/></Suspense>}>
                     <Route index element={<Home/>}/>
-                    <Route path="messages" element={<Messages/>}/>
+                    <Route path="messages/:conversionCategory/:userId" element={<Messages/>}/>
                     <Route path="notification" element={<Notification/>}/>
                     <Route path="setting" element={<Setting/>}/>
                 </Route>

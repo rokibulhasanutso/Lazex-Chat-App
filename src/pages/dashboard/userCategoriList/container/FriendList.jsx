@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ImageHeader from "../../../../components/common/ImageHeader";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillMessage } from "react-icons/ai";
+import { Link } from 'react-router-dom';
 
 const FriendList = () => {
     const [friends, setFriends] = useState([])
@@ -94,11 +95,16 @@ const FriendList = () => {
                                 name={val?.userInfo?.name}
                             />
                             <span className="flex-1 text-lg">{val?.userInfo?.name}</span>
-                            <button 
+
+                            {/* sand massage Buttons */}
+                            <Link
+                                to={`messages/to/${val.id}`} 
                                 className="text-2xl text-slate-400 hover:text-app-primary active:scale-95"
                             >
                                 <AiFillMessage/>
-                            </button>
+                            </Link>
+
+                            {/* option buttons */}
                             <div className="relative">
                                 <button className="peer p-2"><BsThreeDots/></button>
                                 <div className="hidden peer-hover:block hover:block absolute top-4 z-10 left-0 -translate-x-[calc(100%-20px)]">

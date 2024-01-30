@@ -7,11 +7,7 @@ const App = () => {
     document.title = "Lezex Chat"
 
     return (
-        <>
-            <RouterProvider router={rootRoute}/>
-
-            
-        </>
+        <RouterProvider router={rootRoute}/>
     );
 };
 
