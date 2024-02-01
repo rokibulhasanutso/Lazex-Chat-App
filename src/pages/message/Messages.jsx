@@ -84,6 +84,7 @@ const Messages = () => {
                         <ChatViewContent
                             convertionType={convertionType}
                             convertionId={convertionId}
+                            currentUserImage={currentUserImage}
                         />
                     </div>
                     

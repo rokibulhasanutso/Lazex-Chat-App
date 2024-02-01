@@ -1,6 +1,7 @@
 import { GrEmoji } from "react-icons/gr";
 import { IoImageOutline } from "react-icons/io5";
 import { IoIosSend } from "react-icons/io";
+import { FaThumbsUp } from "react-icons/fa6";
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react';
 import { useEffect, useRef, useState } from "react";
@@ -9,31 +10,21 @@ import { db, uid } from "../../../firebase/realtimeDatabaseFunctions";
 
 const MassageEditor = ({convertionType, convertionId}) => {
     const [emojiOpen, setEmojiOpen] = useState(false)
+    const [isEditorEmpty, setIsEditorEmpty] = useState(true)
     const emojiContentRef = useRef('') 
     const editorRef= useRef('') 
 
-    useEffect(() => {
-        const emojiCloseClickOutside = (e) => {
-            if (emojiOpen && !emojiContentRef.current?.contains(e.target)) {
-                setEmojiOpen(false);
-            }
+    // check editor is empty or not
+    const getEditorInput = (e) => {
+        if (e.target.innerText === '') {
+            setIsEditorEmpty(true)
         }
-        window.addEventListener('mousedown', emojiCloseClickOutside)
-        return () => window.removeEventListener('mousedown', emojiCloseClickOutside)
-    }, [emojiOpen])
-    
-    const sendmessage = () => {
-        const key = push(ref(db)).key
-
-        update(ref(db, `chats/${convertionType}/${convertionId}/${key}`), {
-            id: key,
-            date: new Date().getTime(),
-            senderId: uid(),
-            message: editorRef.current.innerText.trim(),
-            read: false
-        })
+        else {
+            setIsEditorEmpty(false)
+        }
     }
 
+    // key down editor box function
     const messageEditor = (event) => {
         const { keyCode, shiftKey } = event;
 
@@ -48,13 +39,15 @@ const MassageEditor = ({convertionType, convertionId}) => {
         }
     }
 
+    // set emoji function
     const selectEmoji = (emojiObject) => {
-
         // get Emoji
         const symbol = emojiObject.unified.split("_")
         const codeArray = []
         symbol.forEach(element => codeArray.push('0x' + element))
         const emoji = String.fromCodePoint(...codeArray)
+
+        console.log(emoji)
 
         // add emoji inside editalbe content
         const selection = window.getSelection();
@@ -73,6 +66,33 @@ const MassageEditor = ({convertionType, convertionId}) => {
         }
     }
 
+    // when emoji box open and click outside then close emoji box
+    useEffect(() => {
+        const emojiCloseClickOutside = (e) => {
+            if (emojiOpen && !emojiContentRef.current?.contains(e.target)) {
+                setEmojiOpen(false);
+            }
+        }
+        window.addEventListener('mousedown', emojiCloseClickOutside)
+        return () => window.removeEventListener('mousedown', emojiCloseClickOutside)
+    }, [emojiOpen])
+
+    // send message on database
+    const sendmessage = () => {
+        const key = push(ref(db)).key
+
+        update(ref(db, `chats/${convertionType}/${convertionId}/${key}`), {
+            id: key,
+            date: new Date().getTime(),
+            senderId: uid(),
+            message: editorRef.current.innerText.trim() || 'like',
+            read: false
+        })
+        .then(() => {
+            editorRef.current.innerHTML = ''
+            setIsEditorEmpty(true)
+        })
+    }
 
     return (
         <div className="flex gap-x-2">
@@ -92,6 +112,7 @@ const MassageEditor = ({convertionType, convertionId}) => {
                     role="textbox"
                     className="w-full text-xl outline-none max-h-80 overflow-x-auto"
                     onKeyDown={messageEditor}
+                    onInput={getEditorInput}
                 />
 
                 {/* buttons */}
@@ -135,12 +156,22 @@ const MassageEditor = ({convertionType, convertionId}) => {
             </div>
 
             {/* messge send button */}
-            <button 
-                onClick={sendmessage} 
-                className="bg-app-primary self-end rounded-xl w-[58px] h-[58px] grid place-content-center m-px"
-            >
-                <IoIosSend className="text-white text-2xl"/>
-            </button>
+            {
+                isEditorEmpty
+                ? <button 
+                    onClick={sendmessage} 
+                    className=" self-end rounded-xl w-[58px] h-[58px] grid place-content-center m-px"
+                  >
+                    <FaThumbsUp className="text-app-primary text-5xl"/>
+                  </button>
+
+                : <button 
+                    onClick={sendmessage} 
+                    className="bg-app-primary self-end rounded-xl w-[58px] h-[58px] grid place-content-center m-px"
+                  >
+                    <IoIosSend className="text-white text-2xl"/>
+                  </button>
+            }
         </div>
     );
 };
