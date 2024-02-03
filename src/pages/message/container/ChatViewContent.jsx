@@ -7,7 +7,7 @@ import { FaThumbsUp } from "react-icons/fa6";
 import { AiFillDelete } from "react-icons/ai";
 import { BiSolidShare } from "react-icons/bi";
 import { BsEmojiSmileFill } from "react-icons/bs";
-import ToolTip from '../../../components/common/ToolTip';
+import ToolTip from "../../../components/common/ToolTip";
 import { Link } from "react-router-dom";
 
 const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyMessagesData}) => {
