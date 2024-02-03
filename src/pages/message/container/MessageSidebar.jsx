@@ -2,12 +2,13 @@ import { memo, useEffect, useState } from "react";
 import ImageHeader from "../../../components/common/ImageHeader";
 import { child, get, onValue, query, ref } from "firebase/database";
 import { db, uid } from "../../../firebase/realtimeDatabaseFunctions";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { format } from 'date-fns';
 
 const MessageSidebar = () => {
     const [friendlist, setFriendlist] = useState([])
     const [chatList, setChatList] = useState([])
+    const { userId } = useParams()
 
     useEffect(() => {
         onValue(ref(db, 'friends'), (snapshot) => {
@@ -73,8 +74,8 @@ const MessageSidebar = () => {
             {
                 chatList?.map((val) => (
                     <Link key={val.id} to={`/messages/to/${val.userId}`}>
-                        <div className="relative border-b hover:after:absolute after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]">
-                            <div className="flex gap-x-4 px-8 py-4 bg-white rounded-xl">
+                        <div className={`relative border-b ${val.userId === userId ? 'after:absolute' : 'hover:after:absolute'} after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]`}>
+                            <div className={`flex gap-x-4 px-8 py-4 ${val.userId === userId ? 'bg-indigo-100' : 'bg-white'}`}>
                                 {/* head image */}
                                 <ImageHeader size={'sm'} photoUrl={val?.imgUrl} name={val?.name}/>
                                 
@@ -91,8 +92,8 @@ const MessageSidebar = () => {
                                     {/* message content */}
                                     <p className="text-base leading-normal tracking-tight text-slate-600 whitespace-pre-line line-clamp-2">
                                     {
-                                        val?.msg_react
-                                        ? <span>{val.senderId !== uid() ? `Reacted ${val?.msg_react} to your message` : ''}</span>
+                                        val?.msg_react && val.senderId === uid()
+                                        ? <span>Reacted {val?.msg_react} to your message</span>
                                         : <span>{`${val.senderId === uid() ? 'You:' : ''} ${val?.message}`}</span>
                                     }
                                     </p>
