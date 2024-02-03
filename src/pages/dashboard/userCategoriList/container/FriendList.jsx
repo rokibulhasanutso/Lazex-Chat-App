@@ -5,9 +5,12 @@ import ImageHeader from "../../../../components/common/ImageHeader";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillMessage } from "react-icons/ai";
 import { Link } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { setFriendlist } from "../../../../redux/slice/chatSlice";
 
 const FriendList = () => {
     const [friends, setFriends] = useState([])
+    const dispatch = useDispatch()
     
     useEffect(() => {
         onValue(ref(db, 'users'), (snapshot) => {
@@ -56,6 +59,7 @@ const FriendList = () => {
                         .filter((val) => val !== undefined) // remove from undefined and pure array
 
                         setFriends(friendList) // set friends with reqId
+                        dispatch(setFriendlist(friendList))
                     }
                     else {
                         setFriends([])
@@ -63,7 +67,7 @@ const FriendList = () => {
                 })
             }
         })
-    }, [])
+    }, [dispatch])
 
     const userUnfriend = (id) => {
         remove(dbFriendReqRef(id))

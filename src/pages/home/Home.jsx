@@ -9,7 +9,7 @@ const Home = () => {
     const [activeCreatePost, setActiveCreatePost] = useState(false)
 
     return (
-        <div>
+        <div className="my-9">
             <div className="max-w-[774px] mx-auto flex gap-4">
                 <div className="border border-slate-400 rounded-xl overflow-hidden bg-white space-y-10">
                     <div className="">
