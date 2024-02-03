@@ -55,8 +55,9 @@ const MessageSidebar = () => {
                         })
                     }
                 })
-
-                setChatList(chatListArray)
+                
+                const chatListShortedArray = chatListArray.sort((val1, val2) => val2.date - val1.date)
+                setChatList(chatListShortedArray)
             }
             else {
                 console.log('data not found')
