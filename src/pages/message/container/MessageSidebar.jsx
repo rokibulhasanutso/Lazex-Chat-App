@@ -1,69 +1,13 @@
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import ImageHeader from "../../../components/common/ImageHeader";
-import { child, get, onValue, query, ref } from "firebase/database";
-import { db, uid } from "../../../firebase/realtimeDatabaseFunctions";
+import { uid } from "../../../firebase/realtimeDatabaseFunctions";
 import { Link, useParams } from "react-router-dom";
 import { format } from 'date-fns';
+import { useSelector } from "react-redux";
 
 const MessageSidebar = () => {
-    const [friendlist, setFriendlist] = useState([])
-    const [chatList, setChatList] = useState([])
     const { userId } = useParams()
-
-    useEffect(() => {
-        onValue(ref(db, 'friends'), (snapshot) => {
-            if (snapshot.exists()) {
-                snapshot.forEach((eachItem) => {
-                    const fromId = eachItem.val().from 
-                    const toId = eachItem.val().to
-                    const status = eachItem.val().status
-                    // get friendList filterred from firebase friends database object
-                    const friendId = status === 'accepted' && fromId === uid() && toId || toId === uid() && fromId
-
-                    if (friendId) {
-                        get(child(ref(db), `users/${friendId}`)).then((snapshot) => {
-                            setFriendlist(friendList => [
-                                ...friendList,
-                                {
-                                    userId: snapshot.key,
-                                    name: snapshot.val().userInfo.name,
-                                    imgUrl: snapshot.val()?.profilePicture.sm,
-                                }
-                            ])
-                        })
-                    }
-                })
-            }
-        })
-    }, [])
-
-    useEffect(() => {
-        onValue(query(ref(db, 'chats/single')), (snapshot) => {
-            if (snapshot.exists()) {
-                const chatListArray = []
-
-                snapshot.forEach((eachItem) => {
-                    const chatId = eachItem.key.split('_')
-
-                    if (chatId.includes(uid())) {
-                        const chatList = Object.values(eachItem.val())
-                        const lastChatItem = chatList[chatList.length - 1]
-                        
-                        chatListArray.push({
-                            ...friendlist.find((val) => val.userId === chatId.find((val) => val !== uid())),
-                            ...lastChatItem
-                        })
-                    }
-                })
-                
-                const chatListShortedArray = chatListArray.sort((val1, val2) => val2.date - val1.date)
-                setChatList(chatListShortedArray)
-            }
-            else {
-                console.log('data not found')
-            }
-        })
-    }, [friendlist])
+    const chatList = useSelector((state) => state.chatInfo.friendLastchatList)
 
     return (
         <div className="rounded-t-md flex flex-col justify-between h-full">
@@ -78,7 +22,7 @@ const MessageSidebar = () => {
                         <div className={`relative border-b ${val.userId === userId ? 'after:absolute' : 'hover:after:absolute'} after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]`}>
                             <div className={`flex gap-x-4 px-8 py-4 ${val.userId === userId ? 'bg-indigo-100' : 'bg-white'}`}>
                                 {/* head image */}
-                                <ImageHeader size={'sm'} photoUrl={val?.imgUrl} name={val?.name}/>
+                                <ImageHeader size={'sm'} photoUrl={val?.imgUrl?.sm} name={val?.name}/>
                                 
                                 <div className="flex-1">
                                     <div className="flex items-center space-x-3 select-none py-0.5 transition-all">
@@ -95,7 +39,7 @@ const MessageSidebar = () => {
                                     {
                                         val?.msg_react && val.senderId === uid()
                                         ? <span>Reacted {val?.msg_react} to your message</span>
-                                        : <span>{`${val.senderId === uid() ? 'You:' : ''} ${val?.message}`}</span>
+                                        : <span>{`${val.senderId === uid() ? 'You:' : ''} ${val?.message === 'like' ? '👍' : val?.message}`}</span>
                                     }
                                     </p>
                                 </div>

@@ -32,10 +32,10 @@ const Notification = () => {
     }, [])
 
     return (
-        <div className="flex flex-col-reverse gap-y-2">
+        <div className="flex flex-col-reverse gap-y-2 max-w-2xl mx-auto my-9">
         {
             notifications?.map((val, i) => (
-                <div key={i} className="bg-slate-50 py-6 px-8">
+                <div key={i} className="bg-slate-50 py-6 px-8 shadow rounded-md">
                     <div className="flex items-center gap-x-4">
                         <div className="self-start">
                             <ImageHeader 

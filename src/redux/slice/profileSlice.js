@@ -11,7 +11,7 @@ export const profileSlice = createSlice({
         profilePicture: [],
         userPersonalInfo: null,
         userProfilePicture: null,
-        currentProfilePicture : '/avater/avater_f_1.jpg'
+        currentProfilePicture : '/avater/avater_f_1.jpg',
     },
 
     reducers: {

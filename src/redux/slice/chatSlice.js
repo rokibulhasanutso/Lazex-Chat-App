@@ -4,16 +4,16 @@ export const chatSlice = createSlice({
     name: 'chatInfo',
     
     initialState: {
-        friendList: [],
+        friendLastchatList: []
     },
 
     reducers: {
-        setFriendlist: (state, action) => {
-            state.friendList = action.payload
+        setFriendLastchatList: (state, action) => {
+            state.friendLastchatList = action.payload
         },
     }
 })
 
-export const { setFriendlist } = chatSlice.actions
+export const { setFriendLastchatList } = chatSlice.actions
 
 export default chatSlice.reducer

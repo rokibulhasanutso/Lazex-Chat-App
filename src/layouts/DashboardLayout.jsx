@@ -8,13 +8,19 @@ import { setUserInfo, setUserProfilePicture } from '../redux/slice/profileSlice'
 import { dbActiveRef, dbImageRef, dbUserRef } from '../firebase/realtimeDatabaseFunctions';
 import SplashScreen from '../components/splashLoadingScreen/SplashScreen';
 import AppModal from '../components/modal/AppModal';
+import useSetFriendList from '../hooks/useSetFriendList';
+import useFriendsLastChatList from '../hooks/useFriendsLastChatList';
 
 const DashboardLayout = () => {
     const dispatch =  useDispatch()
     const [dataFetchComplete, setDataFetchComplete] = useState()
 
+    // all data fetch from here
+    useSetFriendList()
+    useFriendsLastChatList()
+
     useEffect(() => {
-        
+
             // real time update profile picture 
             // and update redux profile slice state 
             onValue(dbImageRef(), (snapshot) => {
