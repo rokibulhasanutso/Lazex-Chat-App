@@ -22,7 +22,7 @@ const MessageSidebar = () => {
                         <div className={`relative border-b ${val.userId === userId ? 'after:absolute' : 'hover:after:absolute'} after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]`}>
                             <div className={`flex gap-x-4 px-8 py-4 ${val.userId === userId ? 'bg-indigo-100' : 'bg-white'}`}>
                                 {/* head image */}
-                                <ImageHeader size={'sm'} photoUrl={val?.imgUrl?.sm} name={val?.name}/>
+                                <ImageHeader size={'sm'} activity={val?.active} photoUrl={val?.imgUrl?.sm} name={val?.name}/>
                                 
                                 <div className="flex-1">
                                     <div className="flex items-center space-x-3 select-none py-0.5 transition-all">
