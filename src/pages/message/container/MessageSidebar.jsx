@@ -19,8 +19,8 @@ const MessageSidebar = () => {
             {
                 chatList?.map((val) => (
                     <Link key={val.id} to={`/messages/to/${val.userId}`}>
-                        <div className={`relative border-b ${val.userId === userId ? 'after:absolute' : 'hover:after:absolute'} after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]`}>
-                            <div className={`flex gap-x-4 px-8 py-4 ${val.userId === userId ? 'bg-indigo-100' : 'bg-white'}`}>
+                        <div className={`relative border-b ${val?.userId === userId ? 'after:absolute' : 'hover:after:absolute'} after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]`}>
+                            <div className={`flex gap-x-4 px-8 py-4 ${val?.userId === userId ? 'bg-indigo-100' : 'bg-white'}`}>
                                 {/* head image */}
                                 <ImageHeader size={'sm'} activity={val?.active} photoUrl={val?.imgUrl?.sm} name={val?.name}/>
                                 
@@ -30,19 +30,18 @@ const MessageSidebar = () => {
                                             <p className="font-semibold text-xl">{val?.name}</p>
                                         </div>
                                         <div className="items-stretch my-auto">
-                                            <span className="text-sm py-1.5 text-slate-500">{format(new Date(val.date), 'p')}</span>
+                                            <span className="text-sm py-1.5 text-slate-500">{format(new Date(val?.date), 'p')}</span>
                                         </div>
                                     </div>
 
                                     {/* message content */}
                                     <p className="text-base leading-normal tracking-tight text-slate-600 whitespace-pre-line line-clamp-2">
                                     {
-                                        val?.msg_react && val.reactId === val.userId
+                                        val?.msg_react && val?.reactId === val?.userId
                                         ? <span>Reacted {val?.msg_react} to your message</span>
-                                        : <span>{`${val.senderId === uid() ? 'You:' : ''} ${val?.message === 'like' ? '👍' : val?.message}`}</span>
+                                        : <span>{`${val?.senderId === uid() ? 'You:' : ''} ${val?.message === 'like' ? '👍' : val?.message}`}</span>
                                     }
                                     </p>
-                                    {console.log(val)}
                                 </div>
                             </div>
                         </div>

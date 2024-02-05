@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { uid } from "../../firebase/realtimeDatabaseFunctions";
 
 export const chatSlice = createSlice({
     name: 'chatInfo',
@@ -14,8 +15,8 @@ export const chatSlice = createSlice({
             state.friendLastchatList = action.payload
 
             let newUpdateMessage = 0
-            action.payload.forEach(chat => {
-                if (chat.update && !state.isOpenChatBox) {
+            action.payload.forEach(chatEachItem => {
+                if (chatEachItem.isUpdate && chatEachItem.senderId !== uid()) {
                     newUpdateMessage++
                 }
             })

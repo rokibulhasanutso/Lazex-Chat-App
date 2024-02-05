@@ -89,13 +89,13 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     <div className={`relative flex flex-1 flex-row-reverse gap-x-4 items-center group/options`}>
                                         <div className="relative ">
                                             {
-                                                val.message === 'like'
+                                                val?.message === 'like'
                                                 ? <FaThumbsUp className="text-app-primary text-5xl min-w-[70px] text-center"/>
                                                 // other ways normal message
                                                 : <div className="max-w-sm min-w-[70px] flex justify-end">
                                                     <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-app-primary rounded-3xl ${val?.msg_react ? '' : 'rounded-br-none'} text-white`} inline-block relative`}>
                                                         <span className="block whitespace-pre-line text-lg px-5 py-3">
-                                                            {val.message}
+                                                            {val?.message}
                                                         </span>
                                                     </p>
                                                 </div>
@@ -148,8 +148,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     </div>
                                     {/* date */}
                                     <span className="text-gray-500 text-sm space-x-2 self-end">
-                                        <span>{weekName[new Date(val.date).getDay()]}</span>
-                                        <span>{format(new Date(val.date), 'p')}</span>
+                                        <span>{weekName[new Date(val?.date).getDay()]}</span>
+                                        <span>{format(new Date(val?.date), 'p')}</span>
                                     </span>
                                 </div>
                             </div>
@@ -195,12 +195,12 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                             <div className="text-slate-500 group-hover/options:flex flex-row-reverse hidden text-lg">
                                                     
                                                     {/* remove massage */}
-                                                    <button onClick={() => removeChat(val.id)} className="relative group/remove p-1.5 rounded-full hover:bg-slate-200">
+                                                    {/* <button onClick={() => removeChat(val.id)} className="relative group/remove p-1.5 rounded-full hover:bg-slate-200">
                                                         <AiFillDelete/>
                                                         <ToolTip target={'group-hover/remove:block'}>
                                                             <span className="text-xs">Remove</span>
                                                         </ToolTip>
-                                                    </button>
+                                                    </button> */}
                                                     {/* reply message */}
                                                     <button
                                                         onClick={() => replyMessage(val)}
@@ -233,8 +233,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     
                                     {/* date */}
                                     <span className="text-gray-500 text-sm space-x-2">
-                                        <span>{weekName[new Date(val.date).getDay()]}</span>
-                                        <span>{format(new Date(val.date), 'p')}</span>
+                                        <span>{weekName[new Date(val?.date).getDay()]}</span>
+                                        <span>{format(new Date(val?.date), 'p')}</span>
                                     </span>
                                 </div>
                             </div>

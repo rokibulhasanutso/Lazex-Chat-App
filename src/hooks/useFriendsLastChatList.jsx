@@ -15,15 +15,17 @@ const useFriendsLastChatList = () => {
                 const chatListArray = []
 
                 snapshot.forEach((eachItem) => {
-                    const chatId = eachItem.key.split('_')
+                    const chatSplitId = eachItem.key.split('_')
 
-                    if (chatId.includes(uid())) {
+                    if (chatSplitId.includes(uid())) {
                         const chatList = Object.values(eachItem.val())
                         const lastChatItem = chatList[chatList.length - 1]
                         
                         chatListArray.push({
-                            ...friendlist.find((val) => val.userId === chatId.find((val) => val !== uid())),
-                            ...lastChatItem
+                            ...friendlist.find((val) => val.userId === chatSplitId.find((val) => val !== uid())),
+                            ...lastChatItem,
+                            chatId: eachItem.key,
+                            chatType: snapshot.key
                         })
                     }
                 })

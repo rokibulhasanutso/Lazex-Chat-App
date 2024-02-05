@@ -89,7 +89,7 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
             message: editorRef.current.innerText.trim() || 'like',
             read: false,
             replyMessage: replyMessage?.msg || null,
-            update: true
+            isUpdate: true
         })
         .then(() => {
             // close reply content for set empty object

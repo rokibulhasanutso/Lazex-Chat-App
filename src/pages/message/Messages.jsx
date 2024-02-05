@@ -3,11 +3,13 @@ import MessageEditor from "./container/MassageEditor"
 import ChatViewContent from "./container/ChatViewContent";
 import MessageSidebar from "./container/MessageSidebar";
 import { useParams } from "react-router-dom";
-import { child, get, onValue, ref } from 'firebase/database';
+import { child, get, onValue, ref, update } from 'firebase/database';
 import { db, uid } from './../../firebase/realtimeDatabaseFunctions';
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Messages = () => {
+    const chatList = useSelector((state) => state.chatInfo.friendLastchatList)
     const { conversionCategory, userId } = useParams()
     const [currentUserName, setCurrentUserName] = useState('')
     const [currentUserImage, setCurrentUserImage] = useState('')
@@ -53,6 +55,20 @@ const Messages = () => {
         }
 
     }, [conversionCategory, userId])
+
+    // when message component open and chatlist update then set chatlist update message false
+    useEffect(() => {
+        if (chatList) {
+            chatList.forEach(chatListItem => {
+                if (chatListItem.isUpdate && chatListItem.senderId !== uid()) {
+                    update(ref(db, `chats/${chatListItem.chatType}/${chatListItem.chatId}/${chatListItem.id}`), {
+                        isUpdate: false
+                    })
+                    console.log('work')
+                }
+            });
+        }
+    }, [chatList])
 
     return (
         <div className='h-screen py-9'>
