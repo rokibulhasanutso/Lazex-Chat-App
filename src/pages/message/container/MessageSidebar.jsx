@@ -37,11 +37,12 @@ const MessageSidebar = () => {
                                     {/* message content */}
                                     <p className="text-base leading-normal tracking-tight text-slate-600 whitespace-pre-line line-clamp-2">
                                     {
-                                        val?.msg_react && val.senderId === uid()
+                                        val?.msg_react && val.reactId === val.userId
                                         ? <span>Reacted {val?.msg_react} to your message</span>
                                         : <span>{`${val.senderId === uid() ? 'You:' : ''} ${val?.message === 'like' ? '👍' : val?.message}`}</span>
                                     }
                                     </p>
+                                    {console.log(val)}
                                 </div>
                             </div>
                         </div>

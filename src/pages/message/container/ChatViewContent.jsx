@@ -45,7 +45,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
     // message react
     const messageReact = (id, react) => {
         update(ref(db, `chats/${convertionType}/${convertionId}/${id}`), {
-            msg_react: react
+            msg_react: react,
+            reactId: uid()
         })
     }
 
@@ -127,7 +128,7 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                                         </ToolTip>
                                                     </button>
                                                     {/* react of message */}
-                                                    <button className="relative group/react p-1.5 rounded-full hover:bg-slate-200">
+                                                    {/* <button className="relative group/react p-1.5 rounded-full hover:bg-slate-200">
                                                         <BsEmojiSmileFill/>
                                                         <div className={`absolute group-hover/react:-translate-y-4 group-hover/react:opacity-100 opacity-0 group-hover/react:visible invisible rounded-full border border-slate-400 transition-all -top-full left-1/2 -translate-x-1/2`}>
                                                             <div className='rounded-full p-1 bg-slate-100 text-white'>
@@ -141,7 +142,7 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                                                 </div>
                                                             </div>
                                                         </div>        
-                                                    </button>
+                                                    </button> */}
                                             </div>
                                         }
                                     </div>

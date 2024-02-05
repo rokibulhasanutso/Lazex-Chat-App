@@ -19,9 +19,9 @@ const useSetFriendList = () => {
                     const toId = eachItem.val().to
                     const status = eachItem.val().status
                     // get friendList filterred from firebase friends database object
-                    const friendId = status === 'accepted' && fromId === uid() && toId || toId === uid() && fromId
+                    const friendId = fromId === uid() && toId || toId === uid() && fromId
 
-                    if (friendId) {
+                    if (status === 'accepted' && friendId) {
                         friendIdListArray.push({
                             userId: friendId,
                             reqId: eachItem.key,
