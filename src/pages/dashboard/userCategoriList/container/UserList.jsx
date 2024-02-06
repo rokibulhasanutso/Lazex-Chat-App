@@ -3,28 +3,14 @@ import ImageHeader from '../../../../components/common/ImageHeader';
 import { FaUserPlus } from "react-icons/fa";
 import { onValue, push, ref, remove, update } from "firebase/database";
 import { db, dbFriendReqRef, dbNotificationRef, uid } from "../../../../firebase/realtimeDatabaseFunctions";
+import { useSelector } from "react-redux";
 
 const UserList = () => {
-    const [users, setUsers] = useState([])
+    const users = useSelector((state) => state.userCategoryList.userList)
     const [filterUsers, setFilterUsers] = useState([])
     const [friends, setFriends] = useState([])
     
     useEffect(() => {
-        onValue(ref(db, 'users'), (snapshot) => {
-            if (snapshot.exists()) {
-                const userArr = Object.values(snapshot.val()).map((value, i) => {
-                    return {
-                        ...value,
-                        id: Object.keys(snapshot.val())[i]
-                    }
-                })
-                setUsers(userArr);
-            }
-            else {
-                setUsers([])
-            }
-        })
-
         onValue(ref(db, 'friends'), (snapshot) => {
             if (snapshot.exists()) {
                 let friendsObj = snapshot.val();

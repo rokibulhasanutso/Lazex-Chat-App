@@ -20,20 +20,6 @@ const Messages = () => {
     const [replyMessage, setReplyMessage] = useState({})
 
     useEffect(() => {
-        onValue(ref(db, 'users/' + userId + '/userInfo/name'), (snapshot) => {
-            if (snapshot.exists()) setCurrentUserName(snapshot.val())
-            else setCurrentUserName('') // set default
-        })
-        onValue(ref(db, 'users/' + userId + '/profilePicture/md'), (snapshot) => {
-            if (snapshot.exists()) setCurrentUserImage(snapshot.val())
-            else setCurrentUserImage('') // set default
-        })
-        onValue(ref(db, 'users/' + userId + '/active'), (snapshot) => {
-            if (snapshot.exists()) setCurrentUserActive(snapshot.val())
-            else setCurrentUserActive('') // set default
-        })
-
-
         // convertion configuration
         if (conversionCategory === 'to') {
             // set convertion type
@@ -52,8 +38,36 @@ const Messages = () => {
         else if (conversionCategory === 'with') {
             // set convertion type
             setConvertionType('group')
+
+            // set convertion id
+            setConvertionId(userId)
         }
 
+        let namePath, imagePath, userActivePath;
+
+        if (conversionCategory === 'to') {
+            namePath = `users/${userId}/userInfo/name`
+            imagePath = `users/${userId}/profilePicture/md`
+            userActivePath = `users/${userId}/active`
+        }
+        else if (conversionCategory === 'with') {
+            namePath = `chats/group/${userId}/name`
+            imagePath = `chats/group/${userId}/imgUrl/md`
+            userActivePath = `chats/group/${userId}/active`
+        }
+
+        onValue(ref(db, `${namePath}`), (snapshot) => {
+            if (snapshot.exists()) setCurrentUserName(snapshot.val())
+            else setCurrentUserName('') // set default
+        })
+        onValue(ref(db, `${imagePath}`), (snapshot) => {
+            if (snapshot.exists()) setCurrentUserImage(snapshot.val())
+            else setCurrentUserImage('') // set default
+        })
+        onValue(ref(db, `${userActivePath}`), (snapshot) => {
+            if (snapshot.exists()) setCurrentUserActive(snapshot.val())
+            else setCurrentUserActive('') // set default
+        })
     }, [conversionCategory, userId])
 
     // when message component open and chatlist update then set chatlist update message false
@@ -64,7 +78,6 @@ const Messages = () => {
                     update(ref(db, `chats/${chatListItem.chatType}/${chatListItem.chatId}/${chatListItem.id}`), {
                         isUpdate: false
                     })
-                    console.log('work')
                 }
             });
         }
@@ -91,7 +104,7 @@ const Messages = () => {
                                 <ImageHeader
                                     activity={currentUserActive}
                                     photoUrl={currentUserImage}
-                                    size={'lg'} 
+                                    size={'lg'}
                                     name={currentUserName}
                                 />
                                 <div className="px-2 py-1 flex-1">

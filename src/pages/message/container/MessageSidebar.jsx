@@ -17,6 +17,12 @@ const MessageSidebar = () => {
 
             <div className="flex-1 overflow-x-auto">
             {
+                chatList?.length <= 0 &&
+                <span className="mt-4 px-8 text-center block text-slate-500">
+                    Could not find your chat list.
+                </span>
+            }
+            {
                 chatList?.map((val) => (
                     <Link key={val.id} to={`/messages/to/${val.userId}`}>
                         <div className={`relative border-b ${val?.userId === userId ? 'after:absolute' : 'hover:after:absolute'} after:rounded-tr-md after:rounded-br-md after:bg-app-primary after:w-1.5 after:h-[calc(100%+2px)] after:z-50 after:-top-px after:-left-[2px]`}>

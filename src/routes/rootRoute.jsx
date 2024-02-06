@@ -5,6 +5,7 @@ import SignIn from './../pages/auth/SignIn';
 // import DashboardLayout from '../layouts/DashboardLayout';
 import Home from "../pages/home/Home";
 import Messages from "../pages/message/Messages";
+import CreateChat from "../pages/message/container/CreateChat";
 import Notification from '../pages/notification/Notification';
 import Setting from "../pages/setting/Setting";
 import ResetPassword from "../pages/auth/ResetPassword";
@@ -31,6 +32,7 @@ const rootRoute = createBrowserRouter(
                 <Route path="/" element={<Suspense fallback={<SplashScreen/>}><DashboardLayout/></Suspense>}>
                     <Route index element={<Home/>}/>
                     <Route path="messages/:conversionCategory/:userId" element={<Messages/>}/>
+                    <Route path="messages/createchat" element={<CreateChat/>}/>
                     <Route path="notification" element={<Notification/>}/>
                     <Route path="setting" element={<Setting/>}/>
                 </Route>

@@ -1,5 +1,4 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { uid } from '../firebase/realtimeDatabaseFunctions';
 import { app } from '../firebase/firebaseConfig';
 import { useState } from 'react';
 import imageCompression from '../utils/imageCompression';
@@ -11,7 +10,7 @@ const useImageUploader = () => {
         return await new Promise((resolve) => {
             imageCompression(data, sizeValue, ({blob}) => {
 
-                const uploadImgRef = () => ref(getStorage(app), `${uid()}/${imagePath}/${imageName}`)
+                const uploadImgRef = () => ref(getStorage(app), `${imagePath}/${imageName}`)
                 const uploadImage = uploadBytesResumable(uploadImgRef() , blob)
 
                 // upload of progress
@@ -48,7 +47,7 @@ const useImageUploader = () => {
             const sizeLength = Object.values(imageContainer.size).length
 
             const data = await uploadImageData(
-                imageContainer.image, 
+                imageContainer.image,
                 imageContainer.path,
                 key, // object property name or image name
                 value, // object property value or image size

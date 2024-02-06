@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 
 const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyMessagesData}) => {
     const [chatList, setChatList] = useState([])
+    const [onloadImage, setOnloadImage] = useState(false)
     const chatviewRef = useRef()
     const weekName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -26,17 +27,20 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
         })
     }, [convertionType, convertionId])
 
+    console.log(chatList)
+
     // all ways scroll bottom when chat list update 
     useEffect(() => {
         chatviewRef.current.parentElement.scrollTop = chatviewRef.current.parentElement.scrollHeight;
-    }, [chatList.length])
+        setOnloadImage(false)
+    }, [chatList.length, onloadImage])
 
     // remove chat
     const removeChat = (id) => {
         update(ref(db, `chats/${convertionType}/${convertionId}/${id}`), {
             remove: true,
             message: 'Remove this message.',
-            imageUrl: '',
+            msgImgUrl: '',
             msg_react: '',
             replyMessage: ''
         })
@@ -61,6 +65,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
 
     return (
         <div ref={chatviewRef} className={chatList.length === 0 ? 'h-full' : ''}>
+
+
             {/* Chat content intro */}
             <div className={`flex flex-col items-center justify-center ${chatList.length === 0 ? 'h-full' : 'my-16'}`}>
                 <ImageHeader activity={false} photoUrl={currentUserImage}/>
@@ -89,15 +95,27 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     <div className={`relative flex flex-1 flex-row-reverse gap-x-4 items-center group/options`}>
                                         <div className="relative ">
                                             {
-                                                val?.message === 'like'
+                                                val?.message === 'thumbsup'
                                                 ? <FaThumbsUp className="text-app-primary text-5xl min-w-[70px] text-center"/>
                                                 // other ways normal message
-                                                : <div className="max-w-sm min-w-[70px] flex justify-end">
-                                                    <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-app-primary rounded-3xl ${val?.msg_react ? '' : 'rounded-br-none'} text-white`} inline-block relative`}>
-                                                        <span className="block whitespace-pre-line text-lg px-5 py-3">
-                                                            {val?.message}
-                                                        </span>
-                                                    </p>
+                                                : <div className="max-w-sm min-w-[70px] flex flex-col gap-y-1 justify-end">
+                                                    {
+                                                        val?.msgImgUrl &&
+                                                        <img 
+                                                            src={val?.msgImgUrl?.md} 
+                                                            alt="" 
+                                                            onLoad={() => setOnloadImage(true)} 
+                                                            className='rounded-2xl max-w-xs'
+                                                        />
+                                                    }
+                                                    {
+                                                        val?.message &&
+                                                        <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-app-primary rounded-3xl ${val?.msg_react ? '' : 'rounded-br-none'} text-white`} inline-block relative`}>
+                                                            <span className="block whitespace-pre-line text-lg px-5 py-3">
+                                                                {val?.message}
+                                                            </span>
+                                                        </p>
+                                                    }
                                                 </div>
                                             }
                                             {
@@ -148,8 +166,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     </div>
                                     {/* date */}
                                     <span className="text-gray-500 text-sm space-x-2 self-end">
-                                        <span>{weekName[new Date(val?.date).getDay()]}</span>
-                                        <span>{format(new Date(val?.date), 'p')}</span>
+                                        {/* <span>{weekName[new Date(val?.date).getDay()]}</span>
+                                        <span>{format(new Date(val?.date), 'p')}</span> */}
                                     </span>
                                 </div>
                             </div>
@@ -172,69 +190,78 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     
                                     <div className={`relative flex gap-x-4 items-center group/options`}>
                                         <div className="relative ">
-                                            {
-                                                val.message === 'like'
-                                                ? <FaThumbsUp className="text-app-primary text-5xl min-w-[70px] text-center"/>
-                                                // other ways normal message
-                                                : <div className="max-w-sm min-w-[70px] flex justify-start">
-                                                    <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-gray-200 rounded-3xl ${val?.msg_react ? '' : 'rounded-bl-none'} text-black`} inline-block relative`}>
-                                                        <span className="block whitespace-pre-line text-lg px-5 py-3">
-                                                            {val.message}
-                                                        </span>
-                                                    </p>
-                                                </div>
-                                            }
-                                            {
-                                                val?.msg_react && 
-                                                <span className="block relative z-20 -mt-4 text-right text-2xl">{val?.msg_react}</span>
-                                            }
+                                        {
+                                            val.message === 'thumbsup'
+                                            ? <FaThumbsUp className="text-app-primary text-5xl min-w-[70px] text-center"/>
+                                            // other ways normal message
+                                            : <div className="max-w-sm min-w-[70px] flex justify-start  flex-col gap-y-1">
+                                                {
+                                                    val?.msgImgUrl &&
+                                                    <img 
+                                                        src={val?.msgImgUrl?.md} 
+                                                        alt="" 
+                                                        onLoad={() => setOnloadImage(true)} 
+                                                        className='rounded-2xl max-w-xs' 
+                                                    />
+                                                }
+                                                <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-gray-200 rounded-3xl ${val?.msg_react ? '' : 'rounded-bl-none'} text-black`} inline-block relative`}>
+                                                    <span className="block whitespace-pre-line text-lg px-5 py-3">
+                                                        {val.message}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        }
+                                        {
+                                            val?.msg_react && 
+                                            <span className="block relative z-20 -mt-4 text-right text-2xl">{val?.msg_react}</span>
+                                        }
                                         </div>
                                         {/* options */}
                                         {
                                             !val?.remove &&
                                             <div className="text-slate-500 group-hover/options:flex flex-row-reverse hidden text-lg">
                                                     
-                                                    {/* remove massage */}
-                                                    {/* <button onClick={() => removeChat(val.id)} className="relative group/remove p-1.5 rounded-full hover:bg-slate-200">
-                                                        <AiFillDelete/>
-                                                        <ToolTip target={'group-hover/remove:block'}>
-                                                            <span className="text-xs">Remove</span>
-                                                        </ToolTip>
-                                                    </button> */}
-                                                    {/* reply message */}
-                                                    <button
-                                                        onClick={() => replyMessage(val)}
-                                                        className="relative group/reply p-1.5 rounded-full hover:bg-slate-200"
-                                                    >
-                                                        <BiSolidShare/>
-                                                        <ToolTip target={'group-hover/reply:block'}>
-                                                            <span className="text-xs">Reply</span>
-                                                        </ToolTip>
-                                                    </button>
-                                                    {/* react of message */}
-                                                    <button className="relative group/react p-1.5 rounded-full hover:bg-slate-200">
-                                                        <BsEmojiSmileFill/>
-                                                        <div className={`absolute group-hover/react:-translate-y-4 group-hover/react:opacity-100 opacity-0 group-hover/react:visible invisible rounded-full border border-slate-400 transition-all -top-full left-1/2 -translate-x-1/2`}>
-                                                            <div className='rounded-full p-1 bg-slate-100 text-white'>
-                                                                <div className="flex items-center text-3xl">
-                                                                    <span onClick={() => messageReact(val.id, '😆')} className="hover:scale-110">😆</span> 
-                                                                    <span onClick={() => messageReact(val.id, '💝')} className="hover:scale-110">💝</span>
-                                                                    <span onClick={() => messageReact(val.id, '😮')} className="hover:scale-110">😮</span> 
-                                                                    <span onClick={() => messageReact(val.id, '😞')} className="hover:scale-110">😞</span>
-                                                                    <span onClick={() => messageReact(val.id, '😡')} className="hover:scale-110">😡</span> 
-                                                                    <span onClick={() => messageReact(val.id, '👍')} className="hover:scale-110">👍</span>
-                                                                </div>
+                                                {/* remove massage */}
+                                                {/* <button onClick={() => removeChat(val.id)} className="relative group/remove p-1.5 rounded-full hover:bg-slate-200">
+                                                    <AiFillDelete/>
+                                                    <ToolTip target={'group-hover/remove:block'}>
+                                                        <span className="text-xs">Remove</span>
+                                                    </ToolTip>
+                                                </button> */}
+                                                {/* reply message */}
+                                                <button
+                                                    onClick={() => replyMessage(val)}
+                                                    className="relative group/reply p-1.5 rounded-full hover:bg-slate-200"
+                                                >
+                                                    <BiSolidShare/>
+                                                    <ToolTip target={'group-hover/reply:block'}>
+                                                        <span className="text-xs">Reply</span>
+                                                    </ToolTip>
+                                                </button>
+                                                {/* react of message */}
+                                                <button className="relative group/react p-1.5 rounded-full hover:bg-slate-200">
+                                                    <BsEmojiSmileFill/>
+                                                    <div className={`absolute group-hover/react:-translate-y-4 group-hover/react:opacity-100 opacity-0 group-hover/react:visible invisible rounded-full border border-slate-400 transition-all -top-full left-1/2 -translate-x-1/2`}>
+                                                        <div className='rounded-full p-1 bg-slate-100 text-white'>
+                                                            <div className="flex items-center text-3xl">
+                                                                <span onClick={() => messageReact(val.id, '😆')} className="hover:scale-110">😆</span> 
+                                                                <span onClick={() => messageReact(val.id, '💝')} className="hover:scale-110">💝</span>
+                                                                <span onClick={() => messageReact(val.id, '😮')} className="hover:scale-110">😮</span> 
+                                                                <span onClick={() => messageReact(val.id, '😞')} className="hover:scale-110">😞</span>
+                                                                <span onClick={() => messageReact(val.id, '😡')} className="hover:scale-110">😡</span> 
+                                                                <span onClick={() => messageReact(val.id, '👍')} className="hover:scale-110">👍</span>
                                                             </div>
-                                                        </div>        
-                                                    </button>
+                                                        </div>
+                                                    </div>        
+                                                </button>
                                             </div>
                                         }
                                     </div>
                                     
                                     {/* date */}
                                     <span className="text-gray-500 text-sm space-x-2">
-                                        <span>{weekName[new Date(val?.date).getDay()]}</span>
-                                        <span>{format(new Date(val?.date), 'p')}</span>
+                                        {/* <span>{weekName[new Date(val?.date).getDay()]}</span>
+                                        <span>{format(new Date(val?.date), 'p')}</span> */}
                                     </span>
                                 </div>
                             </div>

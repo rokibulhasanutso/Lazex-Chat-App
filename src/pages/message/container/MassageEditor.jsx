@@ -8,12 +8,20 @@ import Picker from '@emoji-mart/react';
 import { useEffect, useRef, useState } from "react";
 import { push, ref, update } from "firebase/database";
 import { db, uid } from "../../../firebase/realtimeDatabaseFunctions";
+import imageFileReader from "../../../utils/imageFileReader";
+import imageCompression from "../../../utils/imageCompression";
+import useImageUploader from "../../../hooks/useImageUploader";
 
+// component function 
 const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserName, removeRelyMsg}) => {
     const [emojiOpen, setEmojiOpen] = useState(false)
     const [isEditorEmpty, setIsEditorEmpty] = useState(true)
+    const [messageImage, setMessageImage] = useState(null)
+    const [messageImageBlob, setMessageImageBlob] = useState(null)
+    const [messageImageUploading, setMessageImageUploading] = useState(false)
     const emojiContentRef = useRef('') 
     const editorRef= useRef('') 
+    const { uploadImage, progress } = useImageUploader() // custom hook
 
     // check editor is empty or not
     const getEditorInput = (e) => {
@@ -48,8 +56,6 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
         symbol.forEach(element => codeArray.push('0x' + element))
         const emoji = String.fromCodePoint(...codeArray)
 
-        console.log(emoji)
-
         // add emoji inside editalbe content
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
@@ -78,31 +84,94 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
         return () => window.removeEventListener('mousedown', emojiCloseClickOutside)
     }, [emojiOpen])
 
-    // send message on database
-    const sendmessage = () => {
-        const key = push(ref(db)).key
+    // get select image function
+    const getSelectedImage = (event) => {
+        imageFileReader(event.target.files[0], ({imageData}) => {
+            imageCompression(imageData, 128, ({data}) => {
+                setMessageImage(data)   // image show for which image get selected  
+            })
+            setMessageImageBlob(imageData)  // main file set message in message blob
+        })
+        event.target.value = null   // reset input image file
+    }
 
+    // cancel selected image of send for message image
+    const cancelMessageImage = () => {
+        setMessageImageBlob(null)
+        setMessageImage(null)
+    }
+
+    // send message on database
+    const sendmessage = async (defaultMessage) => {
+        const key = push(ref(db)).key
+        
+        // message selection here 
+        let exactMessage;
+        const WriteMsg = editorRef.current.innerText.trim()
+
+        if (typeof defaultMessage === 'string') {
+            exactMessage = defaultMessage
+        }
+        else if (WriteMsg) {
+            exactMessage = WriteMsg
+        }
+        else {
+            exactMessage = ''
+        }
+        
+        // if image selected then frist upload image then sand message with image url
+        let imageUrl = {};
+        if (messageImageBlob) {
+            setMessageImageUploading(true)
+
+            // uploadImage is a custom hook
+            // it get object argument for upload image 
+            imageUrl = await uploadImage({ 
+                image: messageImageBlob,
+                path: `chat_image/${convertionId}/${key}`,
+                size: { md: 512, lg: 1024 },
+            })
+            .then((imageUrl) => {
+                return imageUrl
+            })
+            .catch((error) => {
+                console.error('Error: ', error);
+            })
+        }
+
+        // upload or send message on firebase realtime database
         update(ref(db, `chats/${convertionType}/${convertionId}/${key}`), {
             id: key,
             date: new Date().getTime(),
             senderId: uid(),
-            message: editorRef.current.innerText.trim() || 'like',
+            message: exactMessage,
+            msgImgUrl: Object.keys(imageUrl).length !== 0 ? imageUrl : null,
             read: false,
             replyMessage: replyMessage?.msg || null,
             isUpdate: true
         })
         .then(() => {
-            // close reply content for set empty object
-            removeRelyMsg({})
-            // clear editor input section
-            editorRef.current.innerHTML = ''
-            setIsEditorEmpty(true) // set confirmation editor is empty
+            setMessageImageUploading(false)     // imageUploading loading close
+            cancelMessageImage()                // cancel selected image
+            removeRelyMsg({})                   // close reply content for set empty object
+            editorRef.current.innerHTML = ''    // clear editor input section
+            setIsEditorEmpty(true)              // set confirmation editor is empty
         })
     }
 
     return (
-        <div>
-            {Object.keys(replyMessage).length > 0 &&
+        <div className="relative">
+            {/* when upload image time show loading */}
+            {
+                messageImageUploading &&
+                <div className="absolute grid place-content-center inset-0 z-50 backdrop-blur border rounded-2xl">
+                    <p className="font-semibold">Please wait for image upload {progress}</p>
+                </div>
+            }
+
+            {/* reply target message */}
+            {
+                Object.keys(replyMessage).length > 0 &&
                 <div className="py-2 relative">
                     <p className="font-semibold text-lg">Replying to {
                         replyMessage.senderId === uid() ? 'your self' : replyUserName 
@@ -114,10 +183,34 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
                     >
                         <AiFillCloseCircle/>
                     </button>
-                </div>}
+                </div>
+            }
+
+            {/* add image with message */}
+            {
+                messageImage && 
+                <div className="m-1.5 space-y-2">
+                    <p className="font-semibold text-slate-500 text-lg">Add image with message</p>
+                    <div>
+                        <div className="relative inline-block">
+                            <div className="w-16 h-16 rounded-md object-center overflow-hidden">
+                                <img src={messageImage} alt="Get message image" />
+                            </div>
+                            <button 
+                                onClick={cancelMessageImage} // remove image
+                                className="absolute -top-2 -right-2 text-slate-500 bg-white rounded-full shadow text-2xl active:scale-95 "
+                            >
+                                <AiFillCloseCircle/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
             
+            {/* editor content or message input */}
             <div className="flex gap-x-2">
                 <div className="flex-1 border-2 rounded-xl px-5 py-3 flex focus-within:border-app-primary">
+                    {/* message editor */}
                     <div 
                         ref={editorRef}
                         contentEditable='true'
@@ -132,14 +225,25 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
 
                     {/* buttons */}
                     <div className="ps-4 items-end flex gap-x-4">
-                        <button
-                            onClick={() => {}}
+                        {/* get select image button */}
+                        <div
                             className="text-slate-500"
                         >
-                            <IoImageOutline className="text-3xl hover:text-app-primary"/>
-                        </button>
+                            <label htmlFor='uploadImage' className='cursor-pointer'>
+                                <IoImageOutline className="text-3xl hover:text-app-primary"/>
+                            </label>
+                            <input 
+                                id="uploadImage" 
+                                type="file"
+                                accept=".jpg, .jpeg, .png"
+                                hidden
+                                onChange={getSelectedImage}
+                            />
+                        </div>
 
+                        {/* emoji button */}
                         <div className="relative flex">
+                            {/* emoji picker button */}
                             <button
                                 onClick={() => setEmojiOpen(!emojiOpen)}
                                 className="text-slate-500"
@@ -147,11 +251,11 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
                                 <GrEmoji className="text-3xl hover:text-app-primary"/>
                             </button>
                             
-                            {/* emoji picker */}
+                            {/* emoji picker content */}
                             {emojiOpen &&
                             <div 
                                 ref={emojiContentRef} 
-                                className="border border-app-primary shadow-xl rounded-xl absolute bottom-0 -translate-y-14 left-full -translate-x-full"
+                                className="border border-app-primary shadow-xl rounded-xl absolute z-30 bottom-0 -translate-y-14 left-full -translate-x-full"
                             >
                                 <Picker
                                     data={data}
@@ -172,9 +276,9 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
 
                 {/* messge send button */}
                 {
-                    isEditorEmpty
+                    isEditorEmpty && !messageImageBlob
                     ? <button 
-                        onClick={sendmessage} 
+                        onClick={() => sendmessage('thumbsup')} 
                         className=" self-end rounded-xl w-[58px] h-[58px] grid place-content-center m-px"
                     >
                         <FaThumbsUp className="text-app-primary text-5xl"/>

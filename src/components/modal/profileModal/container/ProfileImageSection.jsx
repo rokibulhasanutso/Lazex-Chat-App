@@ -8,7 +8,7 @@ import imageFileReader from '../../../../utils/imageFileReader';
 import { FiPlus } from 'react-icons/fi';
 import useImageUploader from '../../../../hooks/useImageUploader';
 import { update } from 'firebase/database';
-import { dbImageRef } from './../../../../firebase/realtimeDatabaseFunctions';
+import { dbImageRef, uid } from './../../../../firebase/realtimeDatabaseFunctions';
 
 const ProfileImageSection = () => {
 
@@ -50,7 +50,7 @@ const ProfileImageSection = () => {
         // and set image link or profile picture link on firebase realtime database
         uploadImage({
             image: croppedImagedata.data,
-            path: 'profile_picture',
+            path: `${uid()}/profile_picture`,
             size: { sm: 64, md: 100, lg: 1024 },
         })
         .then((imageUrl) => {
