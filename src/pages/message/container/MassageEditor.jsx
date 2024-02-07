@@ -11,9 +11,11 @@ import { db, uid } from "../../../firebase/realtimeDatabaseFunctions";
 import imageFileReader from "../../../utils/imageFileReader";
 import imageCompression from "../../../utils/imageCompression";
 import useImageUploader from "../../../hooks/useImageUploader";
+import { useSelector } from "react-redux";
 
 // component function 
-const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserName, removeRelyMsg}) => {
+const MassageEditor = ({convertionType, convertionId, replyMessage, removeRelyMsg}) => {
+    const users = useSelector((state) => state.userCategoryList.userList)
     const [emojiOpen, setEmojiOpen] = useState(false)
     const [isEditorEmpty, setIsEditorEmpty] = useState(true)
     const [messageImage, setMessageImage] = useState(null)
@@ -23,6 +25,13 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
     const editorRef= useRef('') 
     const { uploadImage, progress } = useImageUploader() // custom hook
 
+    const callUserName = (userId) => {
+        const userData = users?.find(user => user.id === userId)
+        const username = userData?.userInfo?.name
+
+        return username
+    }
+    
     // check editor is empty or not
     const getEditorInput = (e) => {
         if (e.target.innerText === '') {
@@ -105,6 +114,14 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
     const sendmessage = async (defaultMessage) => {
         const key = push(ref(db)).key
         
+        let chatPath;
+        if (convertionType === 'single') {
+            chatPath = convertionId
+        }
+        else if (convertionType === 'group') {
+            chatPath = convertionId + '/chatlist'
+        }
+
         // message selection here 
         let exactMessage;
         const WriteMsg = editorRef.current.innerText.trim()
@@ -118,7 +135,7 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
         else {
             exactMessage = ''
         }
-        
+
         // if image selected then frist upload image then sand message with image url
         let imageUrl = {};
         if (messageImageBlob) {
@@ -140,7 +157,7 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
         }
 
         // upload or send message on firebase realtime database
-        update(ref(db, `chats/${convertionType}/${convertionId}/${key}`), {
+        update(ref(db, `chats/${convertionType}/${chatPath}/${key}`), {
             id: key,
             date: new Date().getTime(),
             senderId: uid(),
@@ -174,7 +191,7 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, replyUserNam
                 Object.keys(replyMessage).length > 0 &&
                 <div className="py-2 relative">
                     <p className="font-semibold text-lg">Replying to {
-                        replyMessage.senderId === uid() ? 'your self' : replyUserName 
+                        replyMessage.senderId === uid() ? 'your self' : callUserName(replyMessage.senderId) 
                     }</p>
                     <p className="line-clamp-3 whitespace-pre-line">{replyMessage.msg}</p>
                     <button 

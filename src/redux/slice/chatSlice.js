@@ -6,6 +6,7 @@ export const chatSlice = createSlice({
     
     initialState: {
         friendLastchatList: [],
+        groupLastchatList: [],
         updateMessage: 0,
         isOpenChatBox: false
     },
@@ -13,6 +14,18 @@ export const chatSlice = createSlice({
     reducers: {
         setFriendLastchatList: (state, action) => {
             state.friendLastchatList = action.payload
+
+            let newUpdateMessage = 0
+            action.payload.forEach(chatEachItem => {
+                if (chatEachItem.isUpdate && chatEachItem.senderId !== uid()) {
+                    newUpdateMessage++
+                }
+            })
+            state.updateMessage = newUpdateMessage
+        },
+
+        setGroupLastchatList: (state, action) => {
+            state.groupLastchatList = action.payload
 
             let newUpdateMessage = 0
             action.payload.forEach(chatEachItem => {
@@ -33,6 +46,6 @@ export const chatSlice = createSlice({
     }
 })
 
-export const { setFriendLastchatList, clearUpdateMessage } = chatSlice.actions
+export const { setFriendLastchatList, setGroupLastchatList, setOpenChatBox } = chatSlice.actions
 
 export default chatSlice.reducer

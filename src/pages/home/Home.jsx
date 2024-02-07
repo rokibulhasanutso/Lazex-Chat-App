@@ -4,8 +4,10 @@ import { PiCirclesThreePlusFill } from "react-icons/pi";
 import { IoSearchSharp } from "react-icons/io5";
 import { useState } from "react";
 import InterSectionObserver from "./container/InterSectionObserver";
+import SearchUser from "./container/SearchUser";
 
 const Home = () => {
+    const [openGroupMember, setOpenGroupMember] = useState(false);
     const [activeCreatePost, setActiveCreatePost] = useState(false)
 
     return (
@@ -49,9 +51,12 @@ const Home = () => {
                             <PiCirclesThreePlusFill/>
                         </button>
                         <button
+                            onClick={() => {setOpenGroupMember(true)}}
                             className="border p-4 bg-white rounded-full shadow-lg active:scale-95"
                         >
                             <IoSearchSharp/>
+
+                            <SearchUser setOpenGroupMember={setOpenGroupMember} openGroupMember={openGroupMember}/>
                         </button>
                     </div>
                 </div>

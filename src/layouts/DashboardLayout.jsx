@@ -11,6 +11,7 @@ import AppModal from '../components/modal/AppModal';
 import useSetFriendList from '../hooks/useSetFriendList';
 import useFriendsLastChatList from '../hooks/useFriendsLastChatList';
 import useGetUserList from '../hooks/useGetUserList';
+import useGroupsLastChatList from '../hooks/useGroupsLastChatList';
 
 const DashboardLayout = () => {
     const dispatch =  useDispatch()
@@ -20,6 +21,7 @@ const DashboardLayout = () => {
     useGetUserList()
     useSetFriendList()
     useFriendsLastChatList()
+    useGroupsLastChatList()
 
     useEffect(() => {
 

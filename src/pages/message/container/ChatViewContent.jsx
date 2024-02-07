@@ -9,9 +9,12 @@ import { BiSolidShare } from "react-icons/bi";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import ToolTip from "../../../components/common/ToolTip";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyMessagesData}) => {
+    const users = useSelector((state) => state.userCategoryList.userList)
     const [chatList, setChatList] = useState([])
+    const [chatPath, setChatPath] = useState(false)
     const [onloadImage, setOnloadImage] = useState(false)
     const chatviewRef = useRef()
     const weekName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -19,15 +22,32 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
     useEffect(() => {
         setChatList([]) // init
 
-        onValue(ref(db, `chats/${convertionType}/${convertionId}`), (snapshot) => {
+        if (convertionType === 'single') {
+            setChatPath(convertionId)
+        }
+        else if (convertionType === 'group') {
+            setChatPath(convertionId + '/chatlist')
+        }
+
+        onValue(ref(db, `chats/${convertionType}/${chatPath}`), (snapshot) => {
             if (snapshot.exists()) {
-                const chatArray = Object.values(snapshot.val())
+                const chatArray = []
+                
+                snapshot.forEach(eachItem => {
+                    const userData = users?.find(({id}) => id === eachItem.val().senderId)
+                    chatArray.push({
+                        ...eachItem.val(),
+                        name: userData?.userInfo?.name,
+                        imgUrl: userData?.profilePicture,
+                        active: userData?.active
+                    })
+                })
+
                 setChatList(chatArray)
+                console.log(chatArray)
             }
         })
-    }, [convertionType, convertionId])
-
-    console.log(chatList)
+    }, [convertionType, convertionId, chatPath, users])
 
     // all ways scroll bottom when chat list update 
     useEffect(() => {
@@ -37,7 +57,7 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
 
     // remove chat
     const removeChat = (id) => {
-        update(ref(db, `chats/${convertionType}/${convertionId}/${id}`), {
+        update(ref(db, `chats/${convertionType}/${chatPath}/${id}`), {
             remove: true,
             message: 'Remove this message.',
             msgImgUrl: '',
@@ -48,7 +68,7 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
 
     // message react
     const messageReact = (id, react) => {
-        update(ref(db, `chats/${convertionType}/${convertionId}/${id}`), {
+        update(ref(db, `chats/${convertionType}/${chatPath}/${id}`), {
             msg_react: react,
             reactId: uid()
         })
@@ -166,8 +186,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     </div>
                                     {/* date */}
                                     <span className="text-gray-500 text-sm space-x-2 self-end">
-                                        {/* <span>{weekName[new Date(val?.date).getDay()]}</span>
-                                        <span>{format(new Date(val?.date), 'p')}</span> */}
+                                        <span>{weekName[new Date(val?.date).getDay()]}</span>
+                                        <span>{format(new Date(val?.date), 'p')}</span>
                                     </span>
                                 </div>
                             </div>
@@ -177,7 +197,7 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                         return (
                             <div key={val.id} className="flex gap-x-4">
                                 <div className="self-end mb-7">
-                                    <ImageHeader size={'xs'} activity={false} photoUrl={currentUserImage}/>
+                                    <ImageHeader size={'xs'} activity={false} photoUrl={val?.imgUrl?.sm}/>
                                 </div>
                                 <div className="relative flex-1 flex flex-col justify-end gap-x-4 my-2">
                                     {/* reply message */}
@@ -260,8 +280,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     
                                     {/* date */}
                                     <span className="text-gray-500 text-sm space-x-2">
-                                        {/* <span>{weekName[new Date(val?.date).getDay()]}</span>
-                                        <span>{format(new Date(val?.date), 'p')}</span> */}
+                                        <span>{weekName[new Date(val?.date).getDay()]}</span>
+                                        <span>{format(new Date(val?.date), 'p')}</span>
                                     </span>
                                 </div>
                             </div>

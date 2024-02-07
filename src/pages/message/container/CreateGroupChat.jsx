@@ -19,7 +19,7 @@ const CreateGroupChat = () => {
     const [groupImage, setGroupImage] = useState(null)
     const [groupImageBlob, setGroupImageBlob] = useState(null)
     const [creationLoading, setCreationLoading] = useState(false)
-    const { uploadImage, progress } = useImageUploader() // custom hook
+    const { uploadImage } = useImageUploader() // custom hook
     const navigate = useNavigate()
 
     const userSearch = (e) => {

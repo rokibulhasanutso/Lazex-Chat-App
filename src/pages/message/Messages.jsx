@@ -7,6 +7,8 @@ import { child, get, onValue, ref, update } from 'firebase/database';
 import { db, uid } from './../../firebase/realtimeDatabaseFunctions';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import GroupMemberView from "./container/GroupMemberView";
+import { IoClose } from "react-icons/io5";
 
 const Messages = () => {
     const chatList = useSelector((state) => state.chatInfo.friendLastchatList)
@@ -18,6 +20,17 @@ const Messages = () => {
     const [convertionType, setConvertionType] = useState(null)
     // get reply target message from chatviewContent
     const [replyMessage, setReplyMessage] = useState({})
+    const [openGroupMember, setOpenGroupMember] = useState(false)
+    const [adminName, setAdminName] = useState('')
+    const users = useSelector((state) => state.userCategoryList.userList)
+
+    const callUserName = (userId) => {
+        const userData = users?.find(user => user.id === userId)
+        const username = userData?.userInfo?.name
+
+        return username
+    }
+    console.log(adminName)
 
     useEffect(() => {
         // convertion configuration
@@ -107,8 +120,43 @@ const Messages = () => {
                                     size={'lg'}
                                     name={currentUserName}
                                 />
-                                <div className="px-2 py-1 flex-1">
-                                    <p className="font-semibold text-3xl">{currentUserName}</p>
+
+                                <div className="px-2">
+                                    <div className="py-1 flex-1">
+                                        <p className="font-semibold text-3xl">{currentUserName}</p>
+                                    </div>
+
+                                    {
+                                        convertionType === 'group' &&
+                                        <div className="text-slate-500 font-medium">
+                                            <button
+                                                onClick={() => {setOpenGroupMember(true)}}
+                                                className="text-app-primary hover:underline"
+                                            >
+                                                Group Member
+                                            </button> 
+                                            <span className="ms-1">Admin by {callUserName(adminName.id)}</span>
+
+                                            {   openGroupMember &&
+                                                <div className="fixed inset-0 backdrop-blur-sm backdrop-brightness-[.3] z-50 flex justify-center items-center">
+                                                    <div className=" relative bg-white block max-w-lg w-full border rounded-md overflow-hidden">
+                                                        <button 
+                                                            onClick={() => {setOpenGroupMember(false)}}
+                                                            className="text-2xl absolute top-2.5 right-2.5 rounded-full hover:bg-slate-300 px-1 py-1"
+                                                        >
+                                                            <IoClose/>
+                                                        </button>
+                                                        
+                                                        <p className="text-center py-3 text-xl text-slate-600">Group Member</p>
+
+                                                        <div>
+                                                            <GroupMemberView groupId={userId} setAdminName={setAdminName}/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -130,7 +178,6 @@ const Messages = () => {
                                 convertionType={convertionType}
                                 convertionId={convertionId}
                                 replyMessage={replyMessage} // for target message send and view
-                                replyUserName={currentUserName}
                                 removeRelyMsg={setReplyMessage}
                             />
                         </div>
