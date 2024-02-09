@@ -11,7 +11,7 @@ import GroupMemberView from "./container/GroupMemberView";
 import { IoClose } from "react-icons/io5";
 
 const Messages = () => {
-    const chatList = useSelector((state) => state.chatInfo.friendLastchatList)
+    const {lastChatList} = useSelector((state) => state.chatInfo)
     const { conversionCategory, userId } = useParams()
     const [currentUserName, setCurrentUserName] = useState('')
     const [currentUserImage, setCurrentUserImage] = useState('')
@@ -30,7 +30,6 @@ const Messages = () => {
 
         return username
     }
-    console.log(adminName)
 
     useEffect(() => {
         // convertion configuration
@@ -85,16 +84,21 @@ const Messages = () => {
 
     // when message component open and chatlist update then set chatlist update message false
     useEffect(() => {
-        if (chatList) {
-            chatList.forEach(chatListItem => {
+        if (lastChatList.length > 0) {
+            lastChatList.forEach(chatListItem => {
                 if (chatListItem.isUpdate && chatListItem.senderId !== uid()) {
-                    update(ref(db, `chats/${chatListItem.chatType}/${chatListItem.chatId}/${chatListItem.id}`), {
+                    const chatType = chatListItem.chatType
+                    const chatId = chatListItem.chatId
+                    const hasGroupChatlist = chatListItem.chatType === 'group' ? '/chatlist' : ''
+                    const id = chatListItem.id
+
+                    update(ref(db, `chats/${chatType}/${chatId}${hasGroupChatlist}/${id}`), {
                         isUpdate: false
                     })
                 }
             });
         }
-    }, [chatList])
+    }, [lastChatList])
 
     return (
         <div className='h-screen py-9'>

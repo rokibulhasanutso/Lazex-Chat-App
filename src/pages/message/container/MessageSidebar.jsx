@@ -9,14 +9,15 @@ const MessageSidebar = () => {
     const { userId } = useParams()
     const friendChatList = useSelector((state) => state.chatInfo.friendLastchatList)
     const groupChatList = useSelector((state) => state.chatInfo.groupLastchatList)
-    const users = useSelector((state) => state.userCategoryList.userList)
+    const usersInfo = useSelector((state) => state.userCategoryList.userInfo)
 
-    const callUserName = (userId) => {
-        const userData = users?.find(user => user.id === userId)
-        const username = userData?.userInfo?.name
 
-        return username
-    }
+    // const callUserName = (userId) => {
+    //     const userData = users?.find(user => user.id === userId)
+    //     const username = userData?.userInfo?.name
+
+    //     return username
+    // }
 
     return (
         <div className="rounded-t-md flex flex-col justify-between h-full">
@@ -62,8 +63,8 @@ const MessageSidebar = () => {
                                     {   
                                         val?.chatType === 'group' && (
                                             val?.msg_react && val?.reactId !== uid()
-                                            ? <span>{callUserName(val.reactId)} Reacted {val?.msg_react} to {`${val?.senderId === uid() ? 'Your' : callUserName(val.senderId)}`} message</span>
-                                            : <span>{`${val?.senderId === uid() ? 'You' : callUserName(val.senderId)}: ${val?.message === 'thumbsup' ? '👍' : val?.message}`}</span>
+                                            ? <span>{usersInfo[val.reactId].name} Reacted {val?.msg_react} to {`${val?.senderId === uid() ? 'Your' : usersInfo[val.senderId].name}`} message</span>
+                                            : <span>{`${val?.senderId === uid() ? 'You' : usersInfo[val.senderId].name}: ${val?.message === 'thumbsup' ? '👍' : val?.message}`}</span>
                                         )
                                     }
                                     </p>

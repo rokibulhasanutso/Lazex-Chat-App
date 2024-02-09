@@ -44,7 +44,6 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                 })
 
                 setChatList(chatArray)
-                console.log(chatArray)
             }
         })
     }, [convertionType, convertionId, chatPath, users])
@@ -62,7 +61,8 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
             message: 'Remove this message.',
             msgImgUrl: '',
             msg_react: '',
-            replyMessage: ''
+            replyMessage: '',
+            replyImage: ''
         })
     }
 
@@ -79,13 +79,13 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
         replyMessagesData({
             id: getMessageData.id,
             msg: getMessageData.message,
+            imgUrl: getMessageData?.msgImgUrl?.md || "",
             senderId: getMessageData.senderId
         })
     }
 
     return (
         <div ref={chatviewRef} className={chatList.length === 0 ? 'h-full' : ''}>
-
 
             {/* Chat content intro */}
             <div className={`flex flex-col items-center justify-center ${chatList.length === 0 ? 'h-full' : 'my-16'}`}>
@@ -104,13 +104,27 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                             <div key={val.id} className="flex gap-x-4">
                                 <div className="relative flex-1 flex flex-col justify-end gap-x-4 my-2">
                                     
+                                    {/* reply image */}
+                                    {
+                                        val?.replyImage &&
+                                        <div className="self-end -mb-4">
+                                            <img 
+                                                src={val?.replyImage}
+                                                alt="" 
+                                                onLoad={() => setOnloadImage(true)} 
+                                                className='rounded-2xl w-full max-w-[150px] h-auto object-cover'
+                                            />
+                                        </div>
+                                    }
                                     {/* reply message */}
-                                    {val?.replyMessage &&
-                                    <p
-                                        className="self-end line-clamp-3 -mb-2 max-w-sm bg-gray-300 px-5 py-2 rounded-3xl whitespace-pre-line"
-                                    >
-                                        {val?.replyMessage}
-                                    </p>}
+                                    {   
+                                        val?.replyMessage &&
+                                        <p
+                                            className="self-end line-clamp-3 -mb-2 max-w-sm bg-gray-300 px-5 py-2 rounded-3xl whitespace-pre-line"
+                                        >
+                                            {val?.replyMessage}
+                                        </p>
+                                    }
                                     
                                     <div className={`relative flex flex-1 flex-row-reverse gap-x-4 items-center group/options`}>
                                         <div className="relative ">
@@ -200,13 +214,27 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                     <ImageHeader size={'xs'} activity={false} photoUrl={val?.imgUrl?.sm}/>
                                 </div>
                                 <div className="relative flex-1 flex flex-col justify-end gap-x-4 my-2">
+                                    {/* reply image */}
+                                    {
+                                        val?.replyImage &&
+                                        <div className="-mb-4">
+                                            <img 
+                                                src={val?.replyImage}
+                                                alt="" 
+                                                onLoad={() => setOnloadImage(true)} 
+                                                className='rounded-2xl w-full max-w-[150px] h-auto object-cover'
+                                            />
+                                        </div>
+                                    }
                                     {/* reply message */}
-                                    {val?.replyMessage &&
-                                    <p 
-                                        className="line-clamp-3 -mb-2 max-w-sm self-start bg-gray-300 px-5 py-2 rounded-3xl whitespace-pre-line"
-                                    >
-                                        {val?.replyMessage}
-                                    </p>}
+                                    {
+                                        val?.replyMessage &&
+                                        <p 
+                                            className="line-clamp-3 -mb-2 max-w-sm self-start bg-gray-300 px-5 py-2 rounded-3xl whitespace-pre-line"
+                                        >
+                                            {val?.replyMessage}
+                                        </p>
+                                    }
                                     
                                     <div className={`relative flex gap-x-4 items-center group/options`}>
                                         <div className="relative ">
@@ -224,11 +252,14 @@ const ChatViewContent = ({convertionType, convertionId, currentUserImage, replyM
                                                         className='rounded-2xl max-w-xs' 
                                                     />
                                                 }
-                                                <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-gray-200 rounded-3xl ${val?.msg_react ? '' : 'rounded-bl-none'} text-black`} inline-block relative`}>
-                                                    <span className="block whitespace-pre-line text-lg px-5 py-3">
-                                                        {val.message}
-                                                    </span>
-                                                </p>
+                                                {
+                                                    val?.message &&
+                                                    <p className={`${val?.remove === true ? 'bg-gray-100 border-2 border-gray-200 rounded-full text-gray-400' : `bg-gray-200 rounded-3xl ${val?.msg_react ? '' : 'rounded-bl-none'} text-black`} inline-block relative`}>
+                                                        <span className="block whitespace-pre-line text-lg px-5 py-3">
+                                                            {val.message}
+                                                        </span>
+                                                    </p>
+                                                }
                                             </div>
                                         }
                                         {

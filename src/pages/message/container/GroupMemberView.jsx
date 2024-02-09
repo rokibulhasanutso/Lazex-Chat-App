@@ -17,8 +17,6 @@ const GroupMemberView = ({groupId, setAdminName}) => {
                 const admin = Object.values(snapshot.val()).find(({type}) => type === 'admin')
                 setAdminName(admin)
 
-                console.log(admin)
-
                 const membersArray = []
 
                 snapshot.forEach((eachItem) => {
@@ -35,7 +33,7 @@ const GroupMemberView = ({groupId, setAdminName}) => {
                 setFilteredUserBySearch(membersArray)
             }
         })
-    }, [groupId, users])
+    }, [groupId, users, setAdminName])
 
     const userSearch = (e) => {
         const searchInput = e.target.value.toLowerCase()

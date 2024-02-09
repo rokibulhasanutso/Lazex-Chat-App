@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 
 // component function 
 const MassageEditor = ({convertionType, convertionId, replyMessage, removeRelyMsg}) => {
-    const users = useSelector((state) => state.userCategoryList.userList)
+    const {userInfo} = useSelector((state) => state.userCategoryList)
     const [emojiOpen, setEmojiOpen] = useState(false)
     const [isEditorEmpty, setIsEditorEmpty] = useState(true)
     const [messageImage, setMessageImage] = useState(null)
@@ -24,13 +24,6 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, removeRelyMs
     const emojiContentRef = useRef('') 
     const editorRef= useRef('') 
     const { uploadImage, progress } = useImageUploader() // custom hook
-
-    const callUserName = (userId) => {
-        const userData = users?.find(user => user.id === userId)
-        const username = userData?.userInfo?.name
-
-        return username
-    }
     
     // check editor is empty or not
     const getEditorInput = (e) => {
@@ -165,6 +158,7 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, removeRelyMs
             msgImgUrl: Object.keys(imageUrl).length !== 0 ? imageUrl : null,
             read: false,
             replyMessage: replyMessage?.msg || null,
+            replyImage: replyMessage?.imgUrl || null,
             isUpdate: true
         })
         .then(() => {
@@ -190,10 +184,19 @@ const MassageEditor = ({convertionType, convertionId, replyMessage, removeRelyMs
             {
                 Object.keys(replyMessage).length > 0 &&
                 <div className="py-2 relative">
-                    <p className="font-semibold text-lg">Replying to {
-                        replyMessage.senderId === uid() ? 'your self' : callUserName(replyMessage.senderId) 
+                    <p className="font-semibold text-lg my-1">Replying to {
+                        replyMessage.senderId === uid() ? 'your self' : userInfo[replyMessage.senderId].name 
                     }</p>
-                    <p className="line-clamp-3 whitespace-pre-line">{replyMessage.msg}</p>
+                    {
+                        replyMessage.imgUrl &&
+                        <div className="w-16 h-16 rounded-md object-center overflow-hidden">
+                            <img src={replyMessage.imgUrl} alt="reply message image" />
+                        </div>
+                    }
+                    {
+                        replyMessage.msg &&
+                        <p className="line-clamp-3 whitespace-pre-line">{replyMessage.msg}</p>
+                    }
                     <button 
                         onClick={() => removeRelyMsg({})} // remove reply message
                         className="absolute top-0 right-0 text-slate-400 text-2xl active:scale-95 m-1.5"

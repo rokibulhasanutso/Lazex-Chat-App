@@ -14,10 +14,10 @@ const useGroupsLastChatList = () => {
                 const chatListArray = []
 
                 snapshot.forEach((eachItem) => {
-                    const groupMembers = Object.values(eachItem?.val()?.members)
-                    const hasGroupMember = groupMembers.find(val => val.id === uid())
+                    const groupMembers = Object.values(eachItem?.val()?.members || {})
+                    const hasGroupMember = groupMembers?.find(val => val.id === uid())
 
-                    if(hasGroupMember.id === uid()) {
+                    if(hasGroupMember?.id === uid()) {
                         const chatList = Object.values(eachItem.val().chatlist)
                         const lastChatItem = chatList[chatList.length - 1]
 

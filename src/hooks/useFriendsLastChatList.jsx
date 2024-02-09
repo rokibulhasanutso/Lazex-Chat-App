@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFriendLastchatList } from "../redux/slice/chatSlice";
 
 const useFriendsLastChatList = () => {
-    const friendlist = useSelector((state) => state.userCategoryList.friendList)
+    const userlistobj = useSelector((state) => state.userCategoryList.userListObj)
     const [chatList, setChatList] = useState([])
     const dispatch = useDispatch()
 
@@ -16,14 +16,20 @@ const useFriendsLastChatList = () => {
 
                 snapshot.forEach((eachItem) => {
                     const chatSplitId = eachItem.key.split('_')
+                    const oppositeUserId = eachItem.key.split('_').find((val) => val !== uid())
 
                     if (chatSplitId.includes(uid())) {
                         const chatList = Object.values(eachItem.val())
                         const lastChatItem = chatList[chatList.length - 1]
+                        const user = userlistobj[oppositeUserId]
                         
                         chatListArray.push({
-                            ...friendlist.find((val) => val.userId === chatSplitId.find((val) => val !== uid())),
                             ...lastChatItem,
+                            userId: user?.id,
+                            active: user?.active,
+                            name: user?.userInfo.name,
+                            bio: user?.userInfo.userBio,
+                            imgUrl: user?.profilePicture,
                             chatId: eachItem.key,
                             chatType: snapshot.key
                         })
@@ -39,7 +45,7 @@ const useFriendsLastChatList = () => {
                 console.log('data not found')
             }
         })
-    }, [friendlist, dispatch])
+    }, [userlistobj, dispatch])
 
     return chatList;
 };

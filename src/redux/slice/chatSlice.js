@@ -7,6 +7,7 @@ export const chatSlice = createSlice({
     initialState: {
         friendLastchatList: [],
         groupLastchatList: [],
+        lastChatList: [],
         updateMessage: 0,
         isOpenChatBox: false
     },
@@ -14,6 +15,7 @@ export const chatSlice = createSlice({
     reducers: {
         setFriendLastchatList: (state, action) => {
             state.friendLastchatList = action.payload
+            state.lastChatList = [...action.payload, ...state.groupLastchatList]
 
             let newUpdateMessage = 0
             action.payload.forEach(chatEachItem => {
@@ -26,6 +28,7 @@ export const chatSlice = createSlice({
 
         setGroupLastchatList: (state, action) => {
             state.groupLastchatList = action.payload
+            state.lastChatList = [...state.friendLastchatList, ...action.payload]
 
             let newUpdateMessage = 0
             action.payload.forEach(chatEachItem => {
